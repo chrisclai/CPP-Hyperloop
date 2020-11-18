@@ -8,3 +8,5 @@ The "rpi" folder contains the .py file that recieves and sends commands to the A
 The "images" folder contains the .PNG files required to run the GUI.
 
 The "vsc" folder contains the GUI code. Keep in mind the image paths are absolute, and not relative.
+
+The "socket" folder contains code that can transfer data between the RPi and an external PC through the same local network.
