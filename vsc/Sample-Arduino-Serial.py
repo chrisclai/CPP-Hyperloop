@@ -122,20 +122,20 @@ def plot_csv(csv_file, cols):
     plt.show()
     
     
-print "Creating serial object..."
+print ("Creating serial object...")
 serial_obj = create_serial_obj(portPath, baud, timeout)
  
-print "Reading serial data..."
+print ("Reading serial data...")
 serial_data = read_serial_data(serial_obj)
 print len(serial_data)
  
-print "Cleaning data..."
+print ("Cleaning data...")
 clean_data =  clean_serial_data(serial_data)
  
-print "Saving to csv..."
+print ("Saving to csv...")
 save_to_csv(clean_data, filename)
  
-print "Plotting data..."
+print ("Plotting data...")
 #simple_plot(filename, (0,1,2), ['time (s)', 'voltage1', 'voltage2'])
 #simple_plot(filename, (0,1), ['time (s)', 'voltage1'])
 plot_csv(filename, gen_col_list(num_signals))
