@@ -1,10 +1,18 @@
+import serial
 import socket
 
+ser = serial.Serial("/dev/ttyACM0", 9600)
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((socket.gethostname(), 1234))
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s.bind(("192.168.68.123", 1234))
 s.listen(5)
 
 while True:
     clientsocket, address = s.accept()
     print(f"Connection from {address} has been established!")
-    clientsocket.send(bytes("Welcome to the server!", "utf-8"))
+    while True:
+        data = ser.readline()
+        decoded = data.decode('utf-8')
+        print(f"Current Temperature: {decoded}")
+        clientsocket.send(bytes(f"Current Temperature: {decoded}", 'utf-8'))
