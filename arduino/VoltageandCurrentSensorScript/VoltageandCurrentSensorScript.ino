@@ -31,7 +31,7 @@ void loop(){
   //Print in Serial Monitor
   Serial.print("Voltage = ");
   Serial.print(voltage,3);
-  Serial.print("\t Amps = "); // shows the voltage measured
+  Serial.print("\n Amps = "); // shows the voltage measured
   Serial.println(Amps,3);
-  delay(1000);
+  delay(100);
 }
