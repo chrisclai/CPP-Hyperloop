@@ -45,14 +45,14 @@ main_canv.pack()
 # IMAGE / ICON FILE PATHS
 # Hyperloop Logo courtesy of Cal Poly Pomona Hyperloop Club.
 # Icons courtesy of FreePik.com.
-hyperloop_logo = tk.PhotoImage(file='\\Users\\Chris\\Documents\\GitHub\\CPP-Hyperloop\\images\\hyperloop\\hyperloop_logo_scale25.png')
-battery_icon = tk.PhotoImage(file='\\Users\\Chris\\Documents\\GitHub\\CPP-Hyperloop\\images\\icons\\battery.png')
-com_icon = tk.PhotoImage(file='\\Users\\Chris\\Documents\\GitHub\\CPP-Hyperloop\\images\\icons\\com.png')
-kin_icon = tk.PhotoImage(file='\\Users\\Chris\\Documents\\GitHub\\CPP-Hyperloop\\images\\icons\\kin.png')
-pod_icon = tk.PhotoImage(file='\\Users\\Chris\\Documents\\GitHub\\CPP-Hyperloop\\images\\icons\\pod.png')
-time_icon = tk.PhotoImage(file='\\Users\\Chris\\Documents\\GitHub\\CPP-Hyperloop\\images\\icons\\time.png')
-motor_icon = tk.PhotoImage(file='\\Users\\Chris\\Documents\\GitHub\\CPP-Hyperloop\\images\\icons\\motor.png')
-progress_icon = ImageTk.PhotoImage(file='\\Users\\Chris\\Documents\\GitHub\\CPP-Hyperloop\\images\\icons\\progress.png')
+hyperloop_logo = tk.PhotoImage(file='images\\hyperloop\\hyperloop_logo_scale25.png')
+battery_icon = tk.PhotoImage(file='images\\icons\\battery.png')
+com_icon = tk.PhotoImage(file='images\\icons\\com.png')
+kin_icon = tk.PhotoImage(file='images\\icons\\kin.png')
+pod_icon = tk.PhotoImage(file='images\\icons\\pod.png')
+time_icon = tk.PhotoImage(file='images\\icons\\time.png')
+motor_icon = tk.PhotoImage(file='images\\icons\\motor.png')
+progress_icon = ImageTk.PhotoImage(file='images\\icons\\progress.png')
 
 # HYPERLOOP LOGO
 # Creates and adds Hyperloop Logo to the workspace.
