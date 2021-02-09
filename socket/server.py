@@ -19,6 +19,6 @@ while True:
     while True:
         data = ser.readline()
         decoded = data.decode('utf-8').strip()
-        print(f"Current Temperature: {decoded}")
-        clientsocket.send(bytes(f"Current Temperature: {decoded}", 'utf-8'))
+        print(decoded)
+        clientsocket.send(bytes(decoded, 'utf-8'))
         time.sleep(0.1)
