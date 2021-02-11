@@ -4,15 +4,8 @@
 // Please refer to the CPP Hyperloop spreadsheet for specific array IDs.
 // Version Control: 2.7.2021
 
-#include <OneWire.h>
-#include <DallasTemperature.h>
-
 #define tempSensor 6
 #define testLED 13
-
-OneWire oneWire (tempSensor);
-
-DallasTemperature sensors(&oneWire);
 
 void RPiSerial()  // Checks to see if serial data has been recieved from the Raspberry Pi
 {
