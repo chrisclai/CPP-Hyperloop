@@ -30,7 +30,7 @@ from PIL import Image, ImageTk
 import random
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(("192.168.68.120", 1234))
+s.connect(("192.168.86.38", 1234))
 
 # PIXEL FORMATTING
 # Used to adjust pixel coordinates of frames and labels.
@@ -117,7 +117,15 @@ class tkLabelUnit:
 # UPDATE FUNCTION
 # Will assign random numbers to values whenever called.
 def updateRandValues():
-    transSpeed.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+
+
+    message = s.recv(1024)
+    num_array = message.decode('utf-8')
+    # print (num_array.split())
+    nums = num_array.split()
+    print (nums[0])
+
+    transSpeed.value['text'] = int(nums[21])
     motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
@@ -132,10 +140,10 @@ def updateRandValues():
     acceleration_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     batteryVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     batteryCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    batteryTemp1_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    batteryTemp2_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    batteryTemp3_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    batteryTemp4_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    batteryTemp1_Label.value['text'] = float(nums[0])
+    batteryTemp2_Label.value['text'] = float(nums[1])
+    batteryTemp3_Label.value['text'] = float(nums[2])
+    batteryTemp4_Label.value['text'] = float(nums[3])
 
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
