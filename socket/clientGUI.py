@@ -123,6 +123,7 @@ def updateRandValues():
     #print(numarray.split())
     nums = numarray.split()
     #print(nums[0])
+
     #print(int(nums[21])*2)
 
     #added code for nummarry to get data in string, nums refers to sensor data number in arduino code
@@ -168,6 +169,7 @@ def updateRandValues():
     root.after(REFRESH_RATE, updateRandValues)
 
 #below are notes for transfering arduino data to ras pi
+
 #.split python command 
 #.splitstring will make the numbers into a List
 #after that can call sesnor data
