@@ -123,13 +123,20 @@ def updateRandValues():
     #print(numarray.split())
     nums = numarray.split()
     #print(nums[0])
-  #  print(int(nums[21])*2)
 
+    #print(int(nums[21])*2)
+
+    #added code for nummarry to get data in string, nums refers to sensor data number in arduino code
    
     transSpeed.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+
+    #Commented out old GUI code and added float code for motor volatge and cuurent
+    #motorVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #motorCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    motorVoltage_Label.value['text'] = float(nums[22]) #Doesn't work
+    motorCurrent_Label.value['text'] = float(nums[23])
+
     motorTemp1_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorTemp2_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorTemp3_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
@@ -139,8 +146,16 @@ def updateRandValues():
     distance_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     velocity_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     acceleration_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    batteryVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    batteryCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+
+    #Commented out old GUI code and added float code for battery volatge and cuurent
+
+    #batteryVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #batteryCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    batteryVoltage_Label.value['text'] = float(nums[24])
+    batteryCurrent_Label.value['text'] = float(nums[25])
+
+    #Commented out old GUI code and added float code for battery temps
+
     # batteryTemp1_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     # batteryTemp2_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     # batteryTemp3_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
@@ -152,6 +167,8 @@ def updateRandValues():
 
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
+
+#below are notes for transfering arduino data to ras pi
 
 #.split python command 
 #.splitstring will make the numbers into a List
