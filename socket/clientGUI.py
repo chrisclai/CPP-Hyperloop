@@ -130,10 +130,10 @@ def updateRandValues():
     transSpeed.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
 
- #Commented out old GUI code and added float code for motor volatge and cuurent
+    #Commented out old GUI code and added float code for motor volatge and cuurent
     #motorVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     #motorCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorVoltage_Label.value['text'] = float(nums[22])
+    motorVoltage_Label.value['text'] = float(nums[22]) #Doesn't work
     motorCurrent_Label.value['text'] = float(nums[23])
 
     motorTemp1_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
