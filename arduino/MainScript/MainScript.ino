@@ -22,7 +22,7 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 
 // Global Variables
 int deviceCount = 0;
-int resolution = 12;
+int resolution = 9;
 unsigned long lastTempRequest = 0;
 int delayInMillis = 0;
 float temperature = 0.0;
