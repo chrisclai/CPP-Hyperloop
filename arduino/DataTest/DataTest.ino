@@ -54,10 +54,10 @@ void loop() {
   sensorData[4] = random(20, 40); // Temp Sensor Battery System
 
   // IMU Readings [16]
-  sensorData[5] = random(100);      // Absolute Orientation x-component
-  sensorData[6] = random(100);      // Absolute Orientation y-component
-  sensorData[7] = random(100);      // Absolute Orientation z-component
-  sensorData[8] = random(100);      // Angular Velocity Vector x-component
+  sensorData[5] = random(100);      // System Calibration
+  sensorData[6] = random(100);      // Gyrometer Calibration
+  sensorData[7] = random(100);      // Accelerometer Calibration
+  sensorData[8] = random(100);      // Magnometer Calibration
   sensorData[9] = random(100);      // Absolute Orientation x-component
   sensorData[10] = random(100);      // Absolute Orientation y-component
   sensorData[11] = random(100);      // Absolute Orientation z-component
