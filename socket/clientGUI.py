@@ -30,8 +30,7 @@ from PIL import Image, ImageTk
 import random
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-s.connect(("192.168.86.38", 1234))
+s.connect(("192.168.1.19", 1234))
 
 # PIXEL FORMATTING
 # Used to adjust pixel coordinates of frames and labels.
@@ -120,13 +119,16 @@ class tkLabelUnit:
 def updateRandValues():
 
     message = s.recv(1024)
-    num_array = message.decode('utf-8')
-    # print (num_array.split())
-    nums = num_array.split()
-    print (nums[0])
+    numarray = message.decode('utf-8')
+    #print(numarray.split())
+    nums = numarray.split()
+    #print(nums[0])
 
-    transSpeed.value['text'] = int(nums[21])
+    #print(int(nums[21])*2)
 
+    #added code for nummarry to get data in string, nums refers to sensor data number in arduino code
+   
+    transSpeed.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
 
     #Commented out old GUI code and added float code for motor volatge and cuurent
@@ -145,9 +147,19 @@ def updateRandValues():
     velocity_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     acceleration_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
 
-    batteryVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    batteryCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #Commented out old GUI code and added float code for battery volatge and cuurent
 
+    #batteryVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #batteryCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    batteryVoltage_Label.value['text'] = float(nums[24])
+    batteryCurrent_Label.value['text'] = float(nums[25])
+
+    #Commented out old GUI code and added float code for battery temps
+
+    # batteryTemp1_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    # batteryTemp2_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    # batteryTemp3_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    # batteryTemp4_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     batteryTemp1_Label.value['text'] = float(nums[0])
     batteryTemp2_Label.value['text'] = float(nums[1])
     batteryTemp3_Label.value['text'] = float(nums[2])
