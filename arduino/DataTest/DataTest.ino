@@ -44,7 +44,7 @@ void loop() {
   // double tempF = sensors.getTempFByIndex(0);
   // Serial.println(String(tempF) + "F");
 
-  int sensorData[27];
+  int sensorData[30];
 
   // Temperature Sensor Readings [5]
   sensorData[0] = random(20, 40); // Temp Sensor Motor Controller 1
@@ -54,35 +54,39 @@ void loop() {
   sensorData[4] = random(20, 40); // Temp Sensor Battery System
 
   // IMU Readings [16]
-  sensorData[5] = random(100);      // Absolute Orientation x-component
-  sensorData[6] = random(100);      // Absolute Orientation y-component
-  sensorData[7] = random(100);      // Absolute Orientation z-component
-  sensorData[8] = random(100);      // Angular Velocity Vector x-component
-  sensorData[9] = random(100);      // Angular Velocity Vector y-component
-  sensorData[10] = random(100);     // Angular Velocity Vector z-component
-  sensorData[11] = random(100);     // Acceleration Vector x-component
-  sensorData[12] = random(100);     // Acceleration Vector y-component
-  sensorData[13] = random(100);     // Acceleration Vector z-component
-  sensorData[14] = random(100);     // Linear Acceleration Vector x-component
-  sensorData[15] = random(100);     // Linear Acceleration Vector y-component
-  sensorData[16] = random(100);     // Linear Acceleration Vector z-component
-  sensorData[17] = random(100);     // Gravity Vector x-component
-  sensorData[18] = random(100);     // Gravity Vector y-component
-  sensorData[19] = random(100);     // Gravity Vector z-component
-  sensorData[20] = random(20, 40);  // Ambient Temperature IMU
+  sensorData[5] = random(100);      // System Calibration
+  sensorData[6] = random(100);      // Gyrometer Calibration
+  sensorData[7] = random(100);      // Accelerometer Calibration
+  sensorData[8] = random(100);      // Magnometer Calibration
+  sensorData[9] = random(100);      // Absolute Orientation x-component
+  sensorData[10] = random(100);      // Absolute Orientation y-component
+  sensorData[11] = random(100);      // Absolute Orientation z-component
+  sensorData[12] = random(100);      // Angular Velocity Vector x-component
+  sensorData[13] = random(100);      // Angular Velocity Vector y-component
+  sensorData[14] = random(100);     // Angular Velocity Vector z-component
+  sensorData[15] = random(100);     // Acceleration Vector x-component
+  sensorData[16] = random(100);     // Acceleration Vector y-component
+  sensorData[17] = random(100);     // Acceleration Vector z-component
+  sensorData[18] = random(100);     // Linear Acceleration Vector x-component
+  sensorData[19] = random(100);     // Linear Acceleration Vector y-component
+  sensorData[20] = random(100);     // Linear Acceleration Vector z-component
+  sensorData[21] = random(100);     // Gravity Vector x-component
+  sensorData[22] = random(100);     // Gravity Vector y-component
+  sensorData[23] = random(100);     // Gravity Vector z-component
+  sensorData[24] = random(20, 40);  // Ambient Temperature IMU
 
   // Pressure Sensor [1]
-  sensorData[21] = random(50, 150); // Pressure in kPa
+  sensorData[25] = random(50, 150); // Pressure in kPa
 
   // Current + Voltage Sensor [5]
-  sensorData[22] = random(30, 70);   // Motor Voltage (V)
-  sensorData[23] = random(50, 100);  // Motor Current (mA)
-  sensorData[24] = random(30, 70);   // Battery Voltage (V)
-  sensorData[25] = random(50, 100);  // Battery Current (mA)
-  sensorData[26] = random(90, 100);  // Battery Capacity (%)
+  sensorData[26] = random(30, 70);   // Motor Voltage (V)
+  sensorData[27] = random(50, 100);  // Motor Current (mA)
+  sensorData[28] = random(30, 70);   // Battery Voltage (V)
+  sensorData[29] = random(50, 100);  // Battery Current (mA)
+  sensorData[30] = random(90, 100);  // Battery Capacity (%)
 
   String printString = "";
-  for (int i = 0; i < 27; i++)
+  for (int i = 0; i < 30; i++)
   {
     printString += String(sensorData[i]) + " ";
   }

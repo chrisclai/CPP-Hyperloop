@@ -30,6 +30,7 @@ from PIL import Image, ImageTk
 import random
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 s.connect(("192.168.86.38", 1234))
 
 # PIXEL FORMATTING
@@ -118,7 +119,6 @@ class tkLabelUnit:
 # Will assign random numbers to values whenever called.
 def updateRandValues():
 
-
     message = s.recv(1024)
     num_array = message.decode('utf-8')
     # print (num_array.split())
@@ -126,9 +126,15 @@ def updateRandValues():
     print (nums[0])
 
     transSpeed.value['text'] = int(nums[21])
+
     motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+
+    #Commented out old GUI code and added float code for motor volatge and cuurent
+    #motorVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #motorCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    motorVoltage_Label.value['text'] = float(nums[22]) #Doesn't work
+    motorCurrent_Label.value['text'] = float(nums[23])
+
     motorTemp1_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorTemp2_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorTemp3_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
@@ -138,8 +144,10 @@ def updateRandValues():
     distance_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     velocity_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     acceleration_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+
     batteryVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     batteryCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+
     batteryTemp1_Label.value['text'] = float(nums[0])
     batteryTemp2_Label.value['text'] = float(nums[1])
     batteryTemp3_Label.value['text'] = float(nums[2])
@@ -147,6 +155,12 @@ def updateRandValues():
 
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
+
+#below are notes for transfering arduino data to ras pi
+
+#.split python command 
+#.splitstring will make the numbers into a List
+#after that can call sesnor data
 
 
 # totally useful function.
