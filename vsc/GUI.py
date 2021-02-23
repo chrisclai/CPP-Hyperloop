@@ -87,39 +87,6 @@ class tkLabelUnit:
 # UPDATE FUNCTION
 # Will assign random numbers to values whenever called.
 def updateRandValues():
-    # Temperature Sensor Readings
-    motorControllerTemp1['text'] = 
-    motorControllerTemp2['text'] =
-    motorTemp1['text'] =
-    motorTemp2['text'] =
-    batterySystemTemp['text'] =
-    # IMU Readings
-    x_absOrientation['text'] =
-    y_absOrientation['text'] =
-    z_absOrientation['text'] =
-    x_angVelocity['text'] =
-    y_angVelocity['text'] =
-    z_angVelocity['text'] =
-    x_acceleration['text'] =
-    y_acceleration['text'] =
-    z_acceleration['text'] =
-    x_linearAcceleration['text'] =
-    y_linearAcceleration['text'] =
-    z_linearAcceleration['text'] =
-    x_gravity['text'] =
-    y_gravity['text'] =
-    z_gravity['text'] =
-    # Pressure Sensor 
-    kPa_Pressure['text'] =
-    # Current + Voltage Sensor
-    motorVoltage['text'] =
-    motorCurrent['text'] =
-    batteryVoltage['text'] =
-    batteryCurrent['text'] =
-    batteryCapacity['text'] =
-
-
-"""
     transSpeed.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     motorVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
@@ -139,7 +106,6 @@ def updateRandValues():
     batteryTemp2_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     batteryTemp3_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     batteryTemp4_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-"""
 
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
@@ -190,7 +156,7 @@ spacex_com_label.place(x=LABEL_BEGIN_X+20,y=LABEL_BEGIN_Y + OFFSET, anchor='ne')
 spacex_com_value = tk.Label(com_canv, text='NOT ESTABLISHED', bg='black', fg='RED', font=('Courier',12,'bold'), justify='left')
 spacex_com_value.place(x=LABEL_BEGIN_X+20 + 10,y=LABEL_BEGIN_Y + OFFSET)
 
-""" transSpeed = tkLabelUnit(master=com_canv, str="Transfer Speed:", val=normalUnitArray[0], unit='kB/s', list=2, offsetX=20) """
+transSpeed = tkLabelUnit(master=com_canv, str="Transfer Speed:", val=normalUnitArray[0], unit='kB/s', list=2, offsetX=20)
 
 # MOTOR
 # Creates workspace for all motor elements.
@@ -202,14 +168,6 @@ motor_canv.place(x=COL2, y=20, anchor='nw')
 
 motorTitle = tkTitle(master=motor_canv, title="Motor", iconpos=0.33, titlepos=0.56, icon=motor_icon)
 
-motorControllerTemp1 = tkLabelUnit(master=motor_canv, str='Motor Contr. 1 Temp: ', val=normalUnitArray[1], unit='°C', list=0)
-motorControllerTemp2 = tkLabelUnit(master=motor_canv, str='Motor Contr. 2 Temp: ', val=normalUnitArray[2], unit='°C', list=1)
-motorTemp1 = tkLabelUnit(master=motor_canv, str='Motor 1 Temp: ', val=normalUnitArray[3], unit='°C', list=2)
-motorTemp2 = tkLabelUnit(master=motor_canv, str='Motor 2 Temp: ', val=normalUnitArray[4], unit='°C', list=3)
-motorVoltage = tkLabelUnit(master=motor_canv, str='Motor Voltage IN:', val=normalUnitArray[5], unit='V', list=4)
-motorCurrent = tkLabelUnit(master=motor_canv, str='Motor Current:', val=normalUnitArray[6], unit='A', list=5)
-
-"""
 motorSpeed_Label = tkLabelUnit(master=motor_canv, str='Motor Speed:', val=normalUnitArray[1], unit='RPM', list=0)
 motorVoltage_Label = tkLabelUnit(master=motor_canv, str='Voltage IN:', val=normalUnitArray[2], unit='V', list=1)
 motorCurrent_Label = tkLabelUnit(master=motor_canv, str='Current:', val=normalUnitArray[3], unit='A', list=2)
@@ -217,7 +175,6 @@ motorTemp1_Label = tkLabelUnit(master=motor_canv, str='Motor 1 Temp:', val=norma
 motorTemp2_Label = tkLabelUnit(master=motor_canv, str='Motor 2 Temp:', val=normalUnitArray[5], unit='°C', list=4)
 motorTemp3_Label = tkLabelUnit(master=motor_canv, str='Motor 3 Temp:', val=normalUnitArray[6], unit='°C', list=5)
 motorTemp4_Label = tkLabelUnit(master=motor_canv, str='Motor 4 Temp:', val=normalUnitArray[7], unit='°C', list=6)
-"""
 
 
 # POD
@@ -230,12 +187,8 @@ pod_canv.place(x=COL3, y=20, anchor='nw')
 
 podTitle = tkTitle(master=pod_canv, title="Pod", iconpos=0.35, titlepos=0.55, icon=pod_icon)
 
-kPa_Pressure = tkLabelUnit(master=pod_canv, str='Pressure:', val=normalUnitArray[7], unit='kPa', list=0)
-
-"""
 pressure_Label = tkLabelUnit(master=pod_canv, str='Pressure:', val=normalUnitArray[8], unit='kPa', list=0)
 rideHeight_Label = tkLabelUnit(master=pod_canv, str='Ride Height:', val=normalUnitArray[9], unit='cm', list=1)
-"""
 
 # KINEMATICS
 # Creates workspace for all motion related elements.
@@ -247,13 +200,9 @@ kin_canv.place(x=COL2, y=MOTOR_HEIGHT+40, anchor='nw')
 
 kinematicTitle = tkTitle(master=kin_canv, title="Kinematics", iconpos=0.265, titlepos=0.575, icon=kin_icon)
 
-# NEED TO FIGURE OUT HOW TO GET KINEMATICS FROM XYZ ORIENTATIONS
-
-"""
 distance_Label = tkLabelUnit(master=kin_canv, str='Distance Traveled:', val=normalUnitArray[10], unit='km', list=0)
 velocity_Label = tkLabelUnit(master=kin_canv, str='Pod Speed:', val=normalUnitArray[11], unit='km/h', list=1)
 acceleration_Label = tkLabelUnit(master=kin_canv, str='Acceleration:', val=normalUnitArray[12], unit='km/h²', list=2)
-"""
 
 # BATTERY
 # Creates workspace for elements relating to battery management.
@@ -265,12 +214,6 @@ bat_canv.place(x=COL3, y=POD_HEIGHT+50, anchor='nw')
 
 batteryTitle = tkTitle(master=bat_canv, title="Battery", iconpos=0.34, titlepos=0.56, icon=battery_icon)
 
-batterySystemTemp = tkLabelUnit(master=bat_canv, str='Battery System Temp:', val=normalUnitArray[8], unit='°C', list=0)
-batteryVoltage = tkLabelUnit(master=bat_canv, str='Battery Voltage:', val=normalUnitArray[9], unit='V', list=1)
-batteryCurrent = tkLabelUnit(master=bat_canv, str='Battery Current:', val=normalUnitArray[10], unit='mA', list=2)
-batteryCapacity = tkLabelUnit(master=bat_canv, str='Battery Capacity:', val=normalUnitArray[11], unit='%', list=3)
-
-"""
 batteryVoltage_Label = tkLabelUnit(master=bat_canv, str='Voltage:', val=normalUnitArray[13], unit='V', list=0)
 batteryCurrent_Label = tkLabelUnit(master=bat_canv, str='Current:', val=normalUnitArray[14], unit='A', list=1)
 batteryLife_Label = tkLabelUnit(master=bat_canv, str='Battery Life:', val=0.01, unit='%', list=2)
@@ -278,7 +221,8 @@ batteryTemp1_Label = tkLabelUnit(master=bat_canv, str='Pack 1 Temp:', val=normal
 batteryTemp2_Label = tkLabelUnit(master=bat_canv, str='Pack 2 Temp:', val=normalUnitArray[16], unit='°C', list=4)
 batteryTemp3_Label = tkLabelUnit(master=bat_canv, str='Pack 3 Temp:', val=normalUnitArray[17], unit='°C', list=5)
 batteryTemp4_Label = tkLabelUnit(master=bat_canv, str='Pack 4 Temp:', val=normalUnitArray[18], unit='°C', list=6)
-"""
+
+
 # hello ceasar
 # hello brendt
 # hello bryce
