@@ -98,10 +98,10 @@ class tkLabelUnit:
 # Will assign random numbers to values whenever called.
 def updateRandValues():
 
-    message = s.recv(1024)
+    message = s.recv(2048)
     nums = message.decode('utf-8').split()
     print(nums)
-   
+
     #transSpeed.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     #motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
 
@@ -119,8 +119,8 @@ def updateRandValues():
     #velocity_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     #acceleration_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
 
-    batteryVoltage_Label.value['text'] = float(nums[24])
-    batteryCurrent_Label.value['text'] = float(nums[25])
+    batteryVoltage_Label.value['text'] = float(nums[10])
+    batteryCurrent_Label.value['text'] = float(nums[10])
     batteryTemp1_Label.value['text'] = float(nums[4])
 
     # Recursive function to update values.
@@ -128,9 +128,11 @@ def updateRandValues():
 
 # totally useful function.
 def brakeon():
+    s.send(bytes('brakeon', 'utf-8'))
     print('brakeon')
 
 def brakeoff():
+    s.send(bytes('brakeoff', 'utf-8'))
     print('brakeoff')
 
 # TIME
