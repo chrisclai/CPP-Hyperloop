@@ -36,20 +36,20 @@ s.connect(("192.168.1.19", 1234))
 # Used to adjust pixel coordinates of frames and labels.
 HEIGHT=750
 WIDTH=1200
-OFFSET=35
-VALUE_OFFSET = 80
-UNIT_OFFSET = 90
+OFFSET=25
+VALUE_OFFSET = 60
+UNIT_OFFSET = 60
 LABEL_BEGIN_X = 190
 LABEL_BEGIN_Y = 70
 COL1 = 0
-COL2 = 450
+COL2 = 410
 COL3 = 820
 
 # IMAGE PIXEL SIZE REFERENCE
 LOGO_HEIGHT=166
 LOGO_WIDTH=373
-ICON_HEIGHT=40
-ICON_WIDTH=40
+ICON_HEIGHT=60
+ICON_WIDTH=60
 
 # UPDATE RANDOM NUMBER TEST
 # Tests to see if label values can change without issues.
@@ -85,17 +85,23 @@ motor_icon = tk.PhotoImage(file='images\\icons\\motor.png')
 progress_icon = ImageTk.PhotoImage(file='images\\icons\\progress.png')
 calib_icon = MIA
 
+hyperloop_background = tk.PhotoImage(file='images\\background\\hyperloop_black_background.png')
+
 # HYPERLOOP LOGO
 # Creates and adds Hyperloop Logo to the workspace.
-title_logo_canv = tk.Canvas(main_canv, width=LOGO_WIDTH, height=LOGO_HEIGHT, highlightthickness=0)
-title_logo_canv.place(relx=0, rely=0, anchor='nw')
-title_logo_canv.create_image(0,0,anchor='nw',image=hyperloop_logo)
+# title_logo_canv = tk.Canvas(main_canv, width=LOGO_WIDTH, height=LOGO_HEIGHT, highlightthickness=0)
+# title_logo_canv.place(relx=0, rely=0, anchor='nw')
+# title_logo_canv.create_image(0,0,anchor='nw',image=hyperloop_logo)
+
+background_canv = tk.Canvas(main_canv, width=WIDTH, height=HEIGHT, highlightthickness=0)
+background_canv.place(relx=0, rely=0, anchor='nw')
+background_canv.create_image(0,0,anchor='nw',image=hyperloop_background)
 
 # TITLES WITH ICON
 # Simplifies positioning of title and icon.
 class tkTitle:
-    def __init__(self, master=root, title='Text', iconpos=0.2, titlepos=0.6, icon=battery_icon):
-        self.title = tk.Label(master, text=title, bg="black", fg='white', font=('Helvetica',20,'bold'), pady=5)
+    def __init__(self, master=root, title='', iconpos=0.4, titlepos=0.6, icon=battery_icon):
+        self.title = tk.Label(master, text=title, bg="black", fg='mistyrose2', font=('Helvetica',20,'bold'), pady=5)
         self.title.place(relx=titlepos, rely=0, anchor='n')
 
         self.icon = tk.Canvas(master, width=ICON_WIDTH, height=ICON_HEIGHT, highlightthickness=0)
@@ -106,13 +112,13 @@ class tkTitle:
 # Simplifies positioning of labels, values, and units.
 class tkLabelUnit:
     def __init__(self, master=root, str='text', val=0.01, unit='m', list=0, offsetX=0):
-        self.label = tk.Label(master, text=str, bg='black', fg='white', font=('Courier',12,'bold'), justify='right')
+        self.label = tk.Label(master, text=str, bg='black', fg='mint cream', font=('garamond',11,), justify='right')
         self.label.place(x=LABEL_BEGIN_X+offsetX, y=LABEL_BEGIN_Y+list*OFFSET, anchor='ne')
 
-        self.value = tk.Label(master, text=val, bg='black', fg='white', font=('Courier',12,), justify='right')
+        self.value = tk.Label(master, text=val, bg='black', fg='mint cream', font=('garamond',11,), justify='right')
         self.value.place(x=LABEL_BEGIN_X+VALUE_OFFSET+offsetX,y=LABEL_BEGIN_Y+list*OFFSET, anchor='ne')
 
-        self.unit = tk.Label(master, text=unit, bg='black', fg='white', font=('Courier',12,'bold'),justify='left')
+        self.unit = tk.Label(master, text=unit, bg='black', fg='mint cream', font=('garamond',11,),justify='left')
         self.unit.place(x=LABEL_BEGIN_X+UNIT_OFFSET+offsetX,y=LABEL_BEGIN_Y+list*OFFSET, anchor='nw')
 
 # UPDATE FUNCTION
@@ -176,18 +182,18 @@ def brakeoff():
 TIME_HEIGHT=150
 TIME_WIDTH=400
 time_canv = tk.Canvas(main_canv, width=TIME_WIDTH, height=TIME_HEIGHT, highlightthickness=0, bg='black')    
-time_canv.place(x=COL1, y=LOGO_HEIGHT+25, anchor='nw')
+time_canv.place(x=COL1, y=35, anchor='nw')
 
-timeTitle = tkTitle(master=time_canv, title="Time", iconpos=0.35, titlepos=0.55, icon=time_icon)
+timeTitle = tkTitle(master=time_canv,iconpos=0.5, icon=time_icon)
 
-elapse_label = tk.Label(time_canv, text='Time Elapsed:', bg='black', fg='white', font=('Courier',12,'bold'),justify='right')
+elapse_label = tk.Label(time_canv, text='Time Elapsed:', bg='black', fg='white', font=('garamond',11,),justify='right')
 elapse_label.place(x=LABEL_BEGIN_X+20,y=LABEL_BEGIN_Y, anchor='ne')
-elapse_value = tk.Label(time_canv, text='00:00:00', bg='black', fg='white', font=('Courier',12,), justify='left')
+elapse_value = tk.Label(time_canv, text='00:00:00', bg='black', fg='white', font=('garamond',11,), justify='left')
 elapse_value.place(x=LABEL_BEGIN_X+20 + 10,y=LABEL_BEGIN_Y)
 
-estimate_label = tk.Label(time_canv, text='Expected Run Time:', bg='black', fg='white', font=('Courier',12,'bold'),justify='right')
+estimate_label = tk.Label(time_canv, text='Expected Run Time:', bg='black', fg='white', font=('garamond',11,),justify='right')
 estimate_label.place(x=LABEL_BEGIN_X+20,y=LABEL_BEGIN_Y + OFFSET, anchor='ne')
-estimate_value = tk.Label(time_canv, text='00:00:00', bg='black', fg='white', font=('Courier',12), justify='left')
+estimate_value = tk.Label(time_canv, text='00:00:00', bg='black', fg='white', font=('garamond',11), justify='left')
 estimate_value.place(x=LABEL_BEGIN_X+20 + 10,y=LABEL_BEGIN_Y + OFFSET)
 
 # COMMUNICATIONS
@@ -196,7 +202,7 @@ estimate_value.place(x=LABEL_BEGIN_X+20 + 10,y=LABEL_BEGIN_Y + OFFSET)
 COM_HEIGHT=225
 COM_WIDTH=400
 com_canv = tk.Canvas(main_canv, width=COM_WIDTH, height=COM_HEIGHT, highlightthickness=0, bg='black')   
-com_canv.place(x=COL1, y=LOGO_HEIGHT+TIME_HEIGHT+35, anchor='nw')
+com_canv.place(x=COL1, y=LOGO_HEIGHT+TIME_HEIGHT+25, anchor='nw')
 
 comLabel = tkTitle(master=com_canv, title="Communication", iconpos=0.225, titlepos=0.6, icon=com_icon)
 
@@ -224,15 +230,19 @@ calib_canv.place(x=COL MIA , y= MIA , anchor='nw')
 
 calibTitle = tkTitle(master=calib_canv, title="Calibration", iconpos= MIA , titlepos= MIA , icon=calib_icon) # NEED TO IMPLEMENT CALIB ICON
 
-calibration_system = tkLabelUnit(master=calibration_canv, str='System', val=normalUnitArray[1], unit='', list=0)
+calib_system = tkLabelUnit(master=calib_canv, str='System', val=normalUnitArray[ MIA ], unit='', list=0)
+calib_gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer', val=normalUnitArray[ MIA ], unit='', list=1)
+calib_accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer', val=normalUnitArray[ MIA ], unit='', list=2)
+calib_magnometer = tkLabelUnit(master=calib_canv, str='Magnometer', val=normalUnitArray[ MIA ], unit='', list=3)
+
 
 # MOTOR
 # Creates workspace for all motor elements.
 # Set bg to 'blue' in motor_canv to see the extent of the workspace.
-MOTOR_HEIGHT=320
+MOTOR_HEIGHT=280
 MOTOR_WIDTH=400
 motor_canv = tk.Canvas(main_canv, width=MOTOR_WIDTH, height=MOTOR_HEIGHT, highlightthickness=0, bg='black') 
-motor_canv.place(x=COL2, y=20, anchor='nw')
+motor_canv.place(x=COL2, y=35, anchor='nw')
 
 motorTitle = tkTitle(master=motor_canv, title="Motor", iconpos=0.33, titlepos=0.56, icon=motor_icon)
 
