@@ -1,36 +1,10 @@
-#import socket
-#import tkinter as tk
-
-#disp = tk.StringVar()
-#disp.set("")
-
-#message = s.recv(1024)
-#temp = ""
-
-#def printTemp():
-    #message = s.recv(1024)
-    #disp.set(message.decode('utf-8'))
-    #root.after(100, printTemp)
-
-#def brakeon():
-    #print('brake')
-
-#def brakeoff():
-    #print('unbrake')
-
-#label = tk.Label(root, width=35, font=("Courier",44), textvariable=disp)
-#label.pack()
-
-#root.after(100, printTemp)
-#root.mainloop()
-
 import socket
 import tkinter as tk
 from PIL import Image, ImageTk
 import random
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(("192.168.1.19", 1234))
+s.connect(("192.168.68.120", 1234))
 
 # PIXEL FORMATTING
 # Used to adjust pixel coordinates of frames and labels.
@@ -119,12 +93,8 @@ class tkLabelUnit:
 def updateRandValues():
 
     message = s.recv(1024)
-    numarray = message.decode('utf-8')
-    #print(numarray.split())
-    nums = numarray.split()
-    #print(nums[0])
-
-    #print(int(nums[21])*2)
+    nums = message.decode('utf-8').split()
+    print(nums)
 
     #added code for nummarry to get data in string, nums refers to sensor data number in arduino code
    
