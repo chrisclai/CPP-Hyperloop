@@ -1,36 +1,10 @@
-#import socket
-#import tkinter as tk
-
-#disp = tk.StringVar()
-#disp.set("")
-
-#message = s.recv(1024)
-#temp = ""
-
-#def printTemp():
-    #message = s.recv(1024)
-    #disp.set(message.decode('utf-8'))
-    #root.after(100, printTemp)
-
-#def brakeon():
-    #print('brake')
-
-#def brakeoff():
-    #print('unbrake')
-
-#label = tk.Label(root, width=35, font=("garamond",44), textvariable=disp)
-#label.pack()
-
-#root.after(100, printTemp)
-#root.mainloop()
-
 import socket
 import tkinter as tk
 from PIL import Image, ImageTk
 import random
 
-#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#s.connect(("192.168.1.19", 1234))
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect(("192.168.68.120", 1234))
 
 # PIXEL FORMATTING
 # Used to adjust pixel coordinates of frames and labels.
@@ -59,7 +33,7 @@ MAX_FLOAT = 300.0
 DIGITS = 2
 normalUnitArray = []
 for i in range(30):
-    normalUnitArray.append(12.34)
+    normalUnitArray.append(0)
     # Initialize / populate the array.
 
 
@@ -124,72 +98,40 @@ class tkLabelUnit:
 # Will assign random numbers to values whenever called.
 def updateRandValues():
 
-    #message = s.recv(1024)
-    numarray = message.decode('utf-8')
-    #print(numarray.split())
-    nums = numarray.split()
-    #print(nums[0])
-
-    #print(int(nums[21])*2)
-
-    #added code for nummarry to get data in string, nums refers to sensor data number in arduino code
+    message = s.recv(1024)
+    nums = message.decode('utf-8').split()
+    print(nums)
    
-    transSpeed.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #transSpeed.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
 
-    #Commented out old GUI code and added float code for motor volatge and cuurent
     #motorVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     #motorCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorVoltage_Label.value['text'] = float(nums[22]) #Doesn't work
-    motorCurrent_Label.value['text'] = float(nums[23])
 
-    motorTemp1_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorTemp2_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorTemp3_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    motorTemp4_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    pressure_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    rideHeight_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    distance_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    velocity_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    acceleration_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    motorControllerTemp1_Label.value['text'] = float(nums[0])
+    motorControllerTemp2_Label.value['text'] = float(nums[1])
+    motorTemp1_Label.value['text'] = float(nums[2])
+    motorTemp2_Label.value['text'] = float(nums[3])
 
-    #Commented out old GUI code and added float code for battery volatge and cuurent
+    #pressure_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #rideHeight_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #distance_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #velocity_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
+    #acceleration_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
 
-    #batteryVoltage_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    #batteryCurrent_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     batteryVoltage_Label.value['text'] = float(nums[24])
     batteryCurrent_Label.value['text'] = float(nums[25])
-
-    #Commented out old GUI code and added float code for battery temps
-
-    # batteryTemp1_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    # batteryTemp2_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    # batteryTemp3_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    # batteryTemp4_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
-    batteryTemp1_Label.value['text'] = float(nums[0])
-    batteryTemp2_Label.value['text'] = float(nums[1])
-    batteryTemp3_Label.value['text'] = float(nums[2])
-    batteryTemp4_Label.value['text'] = float(nums[3])
+    batteryTemp1_Label.value['text'] = float(nums[4])
 
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
 
-#below are notes for transfering arduino data to ras pi
-
-#.split python command 
-#.splitstring will make the numbers into a List
-#after that can call sesnor data
-
-
 # totally useful function.
 def brakeon():
     print('brakeon')
-    #clientsocket.send(bytes("brakeon", 'utf-8'))
 
 def brakeoff():
     print('brakeoff')
-    #clientsocket.send(bytes("brakeoff", 'utf-8'))
-
 
 # TIME
 # Creates workspace for all time elements.
@@ -248,8 +190,8 @@ motorCurrent_Label = tkLabelUnit(master=motor_canv, str='Current: ', val=normalU
 
 motorControllerTemp1_Label = tkLabelUnit(master=motor_canv, str='Controller 1 Temp: ', val=normalUnitArray[0], unit='°C', list=2)
 motorControllerTemp2_Label = tkLabelUnit(master=motor_canv, str='Controller 2 Temp:', val=normalUnitArray[1], unit='°C', list=3)
-motorTemp1_Label = tkLabelUnit(master=motor_canv, str='1 Temp:', val=normalUnitArray[2], unit='°C', list=4)
-motorTemp2_Label = tkLabelUnit(master=motor_canv, str='2 Temp:', val=normalUnitArray[3], unit='°C', list=5)
+motorTemp1_Label = tkLabelUnit(master=motor_canv, str='Motor 1 Temp:', val=normalUnitArray[2], unit='°C', list=4)
+motorTemp2_Label = tkLabelUnit(master=motor_canv, str='Motor 2 Temp:', val=normalUnitArray[3], unit='°C', list=5)
 
 
 # POD
@@ -293,9 +235,6 @@ batteryCurrent_Label = tkLabelUnit(master=bat_canv, str='Current:', val=normalUn
 batteryVoltage_Label = tkLabelUnit(master=bat_canv, str='Voltage:', val=normalUnitArray[25], unit='V', list=1)
 batteryLife_Label = tkLabelUnit(master=bat_canv, str='Battery Life:', val=normalUnitArray[26], unit='%', list=2)
 batteryTemp1_Label = tkLabelUnit(master=bat_canv, str='Pack 1 Temp:', val=normalUnitArray[15], unit='°C', list=3)
-batteryTemp2_Label = tkLabelUnit(master=bat_canv, str='Pack 2 Temp:', val=normalUnitArray[16], unit='°C', list=4)
-batteryTemp3_Label = tkLabelUnit(master=bat_canv, str='Pack 3 Temp:', val=normalUnitArray[17], unit='°C', list=5)
-batteryTemp4_Label = tkLabelUnit(master=bat_canv, str='Pack 4 Temp:', val=normalUnitArray[18], unit='°C', list=6)
 
 
 # POD PROGRESS
