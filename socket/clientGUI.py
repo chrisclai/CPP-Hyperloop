@@ -83,6 +83,7 @@ pod_icon = tk.PhotoImage(file='images\\icons\\pod.png')
 time_icon = tk.PhotoImage(file='images\\icons\\time.png')
 motor_icon = tk.PhotoImage(file='images\\icons\\motor.png')
 progress_icon = ImageTk.PhotoImage(file='images\\icons\\progress.png')
+calib_icon = MIA
 
 # HYPERLOOP LOGO
 # Creates and adds Hyperloop Logo to the workspace.
@@ -158,13 +159,6 @@ def updateRandValues():
 
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
-
-#below are notes for transfering arduino data to ras pi
-
-#.split python command 
-#.splitstring will make the numbers into a List
-#after that can call sesnor data
-
 
 # totally useful function.
 def brakeon():
