@@ -23,6 +23,8 @@ def Main():
 
     host = socket.gethostbyname(socket.gethostname())
 
+    print(f"host found on ip: {host}")
+
     # read serial data from the arduino
     ser = serial.Serial("/dev/ttyACM0", 9600)
 
