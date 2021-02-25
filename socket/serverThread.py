@@ -10,7 +10,7 @@ print_lock = threading.Lock()
 
 # thread function 
 def handle_client(conn, addr): 
-    print(f"[NEW CONNECTION] {addr} connected.")
+    #print(f"[NEW CONNECTION] {addr} connected.")
     
     while True:
         msg = conn.recv(16).decode('utf-8')
@@ -21,7 +21,7 @@ def Main():
         print("Usage: python3 clientThread.py")
         sys.exit(1)
 
-    host = socket.gethostbyname(socket.gethostname())
+    host = "192.168.68.120"
 
     print(f"host found on ip: {host}")
 
@@ -51,13 +51,14 @@ def Main():
         while True:
             thread = threading.Thread(target = handle_client, args=(clientsocket, address))
             thread.start()
-            print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
+            while True:
+                    #print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
 
-            data = ser.readline()
-            decoded = data.decode('utf-8').strip()
-            print(decoded)
-            clientsocket.send(bytes(decoded, 'utf-8'))
-            time.sleep(0.1)
+                    data = ser.readline()
+                    decoded = data.decode('utf-8').strip()
+                    print(decoded)
+                    clientsocket.send(bytes(decoded, 'utf-8'))
+                    time.sleep(0.1)
     s.close() 
 
 
