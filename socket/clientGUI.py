@@ -3,8 +3,14 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import random
 
+if len(sys.argv) != 2:
+        print("Usage: python3 clientThread.py <hostID>")
+        sys.exit(1)
+
+serverIP = sys.argv[1]
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(("192.168.68.120", 1234))
+s.connect((serverIP, 1234))
 
 # PIXEL FORMATTING
 # Used to adjust pixel coordinates of frames and labels.
