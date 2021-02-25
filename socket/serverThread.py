@@ -24,7 +24,7 @@ def Main():
     host = socket.gethostbyname(socket.gethostname())
 
     # read serial data from the arduino
-    ser = serial.Serial("/dev/ttyACM0", 9600)
+    ser = serial.Serial("/dev/ttyACM0", 115200)
 
     # quick reset serial data
     time.sleep(1)
