@@ -4,17 +4,16 @@ import serial
 import time
 
 from _thread import *
-import threading 
-
-print_lock = threading.Lock() 
+import threading  
 
 # thread function 
-def handle_client(conn, addr): 
+def handle_client(conn, addr, ser): 
     #print(f"[NEW CONNECTION] {addr} connected.")
     
     while True:
         msg = conn.recv(16).decode('utf-8')
         print(msg)
+        ser.write(msg.encode('utf-8'))
 
 def Main(): 
     if len(sys.argv) != 1:
@@ -49,7 +48,7 @@ def Main():
         clientsocket, address = s.accept()
         print(f"Connection from {address} has been established!")
         while True:
-            thread = threading.Thread(target = handle_client, args=(clientsocket, address))
+            thread = threading.Thread(target = handle_client, args=(clientsocket, address, ser))
             thread.start()
             while True:
                     #print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
