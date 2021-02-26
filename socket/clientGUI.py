@@ -1,10 +1,17 @@
+import sys
 import socket
 import tkinter as tk
 from PIL import Image, ImageTk
 import random
 
+if len(sys.argv) != 2:
+        print("Usage: python3 clientThread.py <hostID>")
+        sys.exit(1)
+
+serverIP = sys.argv[1]
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(("192.168.68.120", 1234))
+s.connect((serverIP, 1234))
 
 # PIXEL FORMATTING
 # Used to adjust pixel coordinates of frames and labels.
@@ -98,10 +105,10 @@ class tkLabelUnit:
 # Will assign random numbers to values whenever called.
 def updateRandValues():
 
-    message = s.recv(1024)
+    message = s.recv(2048)
     nums = message.decode('utf-8').split()
     print(nums)
-   
+
     #transSpeed.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     #motorSpeed_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
 
@@ -119,8 +126,8 @@ def updateRandValues():
     #velocity_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
     #acceleration_Label.value['text'] = round(random.uniform(MIN_FLOAT, MAX_FLOAT), DIGITS)
 
-    batteryVoltage_Label.value['text'] = float(nums[24])
-    batteryCurrent_Label.value['text'] = float(nums[25])
+    batteryVoltage_Label.value['text'] = float(nums[10])
+    batteryCurrent_Label.value['text'] = float(nums[10])
     batteryTemp1_Label.value['text'] = float(nums[4])
 
     # Recursive function to update values.
@@ -128,9 +135,11 @@ def updateRandValues():
 
 # totally useful function.
 def brakeon():
+    s.send(bytes('brakeon', 'utf-8'))
     print('brakeon')
 
 def brakeoff():
+    s.send(bytes('brakeoff', 'utf-8'))
     print('brakeoff')
 
 # TIME

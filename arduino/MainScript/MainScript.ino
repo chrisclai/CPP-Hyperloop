@@ -51,6 +51,14 @@ void RPiSerial()
       digitalWrite(brakeLED1, LOW);
       digitalWrite(brakeLED2, LOW);
     }
+    else if (command == "motoron")
+    {
+      digitalWrite(DCMotor, HIGH);
+    }
+    else if (command == "motoroff")
+    {
+      digitalWrite(DCMotor, LOW);
+    }
   }
 }
 
@@ -64,6 +72,9 @@ void setup() {
   pinMode(brakeLED2, OUTPUT);
   digitalWrite(brakeLED2, LOW);
 
+  pinMode(DCMotor, OUTPUT);
+  digitalWrite(DCMotor, LOW);
+
   randomSeed(analogRead(0));  // Generate Random Numbers
   
   sensors.begin();
@@ -74,12 +85,12 @@ void setup() {
   lastTempRequest = millis();
 
   // locate devices on the bus
-  Serial.print("Locating devices...");
-  Serial.print("Found ");
-  deviceCount = sensors.getDeviceCount();
-  Serial.print(deviceCount, DEC);
-  Serial.println(" devices.");
-  Serial.println("");
+  // Serial.print("Locating devices...");
+  // Serial.print("Found ");
+  // deviceCount = sensors.getDeviceCount();
+  // Serial.print(deviceCount, DEC);
+  // Serial.println(" devices.");
+  // Serial.println("");
 
   if(!bno.begin())
   {
