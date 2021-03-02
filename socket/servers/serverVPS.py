@@ -38,9 +38,8 @@ def Main():
 
     # a forever loop until client wants to exit 
     while True:  
-        try:
-            print(clientsocket.recv(4096).decode('utf-8'))
-        except:
+        msg = clientsocket.recv(4096).decode('utf-8')
+        if not msg:
             print("Socket Closed.")
             s.close()
             break
