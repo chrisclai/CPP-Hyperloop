@@ -16,19 +16,12 @@ def read_write_async(connIn, connOut, addr):
 def read_write_sync(connIn, connOut, addr):
     print(f"[NEW CONNECTION] {addr} connected to r-w-s thread.")
     while True:
-        msg = connIn.recv(4096)
-        if not msg:
-            connIn.close()
-            print("RPi disconnected. Closing socket.")
-            print("Unable to continue process. Terminating script.")
-            exit()
-        else:
-            try:
-                connOut.send(msg)
-            except:
-                print(f"Packet send attempt to {addr} failed. Closing connection.")
-                connOut.close()
-                break
+        try:
+            connOut.send(connIn.recv(4096))
+        except:
+            print(f"Packet send attempt to {addr} failed. Closing connection.")
+            connOut.close()
+            break
 
 def Main(): 
     if len(sys.argv) != 1:
@@ -60,6 +53,11 @@ def Main():
         print(f"Connection from {rpiaddress} has been established! [THIS IS THE RASPBERRY PI]")
 
         while True:
+            if not connIn.recv(4096):
+                connIn.close()
+                print("RPi disconnected. Closing socket.")
+                print("Unable to continue process. Terminating script.")
+                exit()
             try:
                 conn, addr = s.accept()       
                 print(f"Connection from {addr} has been established!")
