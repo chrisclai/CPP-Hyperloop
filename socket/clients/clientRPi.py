@@ -1,3 +1,6 @@
+import sys
+import serial
+import time
 import socket
 
 def Main():
@@ -7,17 +10,18 @@ def Main():
     
     serverIP = sys.argv[1]
 
+    ser = serial.Serial("/dev/ttyACM0", 115200)
+
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((serverIP, 1234))
 
-    clientsocket, address = s.accept()
-    print(f"Connection from {address} has been established!")
+    print(f"Connection from {serverIP} has been established!")
     while True:
         data = ser.readline()
         try:
                 decoded = data.decode('utf-8')
                 print(decoded)
-                clientsocket.send(bytes(decoded, 'utf-8'))
+                s.send(bytes(decoded, 'utf-8'))
                 time.sleep(0.1)
         except UnicodeDecodeError:
                 print("unicode error detected... anyways,")
