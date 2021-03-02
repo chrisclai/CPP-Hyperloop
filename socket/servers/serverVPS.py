@@ -51,6 +51,7 @@ def Main():
         rpiclientsocket, rpiaddress = s.accept()
         sockdict[rpiclientsocket] = rpiaddress
         print(f"Connection from {rpiaddress} has been established! [THIS IS THE RASPBERRY PI]")
+        time.sleep(3)
 
         while True:
             if not rpiclientsocket.recv(4096):
