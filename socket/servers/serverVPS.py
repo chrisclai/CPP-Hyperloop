@@ -19,7 +19,7 @@ def Main():
         print("Usage: python3 clientThread.py")
         sys.exit(1)
 
-    host = "192.168.68.108"
+    host = "45.56.91.192"
 
     print(f"host found on ip: {host}")
 
@@ -39,7 +39,7 @@ def Main():
     # a forever loop until client wants to exit 
     while True:  
         try:
-            print(clientsocket.recv(2048).decode('utf-8').split())
+            print(clientsocket.recv(4096).decode('utf-8'))
         except:
             print("Socket Closed.")
             s.close()
