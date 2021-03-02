@@ -57,7 +57,7 @@ def Main():
                 connIn.close()
                 print("RPi disconnected. Closing socket.")
                 print("Unable to continue process. Terminating script.")
-                exit()
+                break
             try:
                 conn, addr = s.accept()       
                 print(f"Connection from {addr} has been established!")
