@@ -19,8 +19,9 @@ def read_write_sync(connIn, connOut, addr):
         msg = connIn.recv(4096)
         if not msg:
             connIn.close()
-            print("RPi disconnected. Process terminated. Closing socket.")
-            break
+            print("RPi disconnected. Closing socket.")
+            print("Unable to continue process. Terminating script.")
+            exit()
         else:
             try:
                 connOut.send(msg)
