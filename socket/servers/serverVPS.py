@@ -13,7 +13,7 @@ def read_write_async(connIn, connOut, addr):
         print(msg)
         connOut.send(bytes(msg, 'utf-8'))
 
-def read_write_sync(connIn, connOut, addr)
+def read_write_sync(connIn, connOut, addr):
     print(f"[NEW CONNECTION] {addr} connected to r-w-s thread.")
     while True:
         msg = connIn.recv(4096)
@@ -63,7 +63,7 @@ def Main():
                 print(f"Connection from {addr} has been established!")
                 sockdict[conn] = addr
                 print(f"Socket dictionary: {sockdict}")
-                thread = threading.Thread(target = read_write_sync, args=(rpiclientsocket, conn, addr)
+                thread = threading.Thread(target = read_write_sync, args=(rpiclientsocket, conn, addr))
                 thread.start()
             except:
                 pass   
