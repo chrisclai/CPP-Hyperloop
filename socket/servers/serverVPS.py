@@ -19,7 +19,7 @@ def read_write_sync(connIn, connOut, addr):
         msg = connIn.recv(4096)
         if not msg:
             connIn.close()
-            print("Process terminated. Closing socket.")
+            print("RPi disconnected. Process terminated. Closing socket.")
             break
         else:
             try:
@@ -27,6 +27,7 @@ def read_write_sync(connIn, connOut, addr):
             except:
                 print(f"Packet send attempt to {addr} failed. Closing connection.")
                 connOut.close()
+                break
 
 def Main(): 
     if len(sys.argv) != 1:
