@@ -53,7 +53,8 @@ def Main():
         print(f"Connection from {rpiaddress} has been established! [THIS IS THE RASPBERRY PI]")
 
         while True:
-            if not connIn.recv(4096):
+            msg = connIn.recv(4096)
+            if not msg:
                 connIn.close()
                 print("RPi disconnected. Closing socket.")
                 print("Unable to continue process. Terminating script.")
