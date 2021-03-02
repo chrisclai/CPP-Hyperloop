@@ -1,6 +1,5 @@
 import sys
 import socket
-import serial 
 import time
 
 from _thread import *
@@ -34,12 +33,18 @@ def Main():
     s.listen(5) 
     print("socket is listening") 
 
+    clientsocket, address = s.accept()
+    print(f"Connection from {address} has been established!")
+
     # a forever loop until client wants to exit 
-    while True:
-        clientsocket, address = s.accept()
-        print(f"Connection from {address} has been established!")
-        print(clientsocket.recv(2048).decode('utf-8').split())
-    s.close() 
+    while True:  
+        try:
+            print(clientsocket.recv(2048).decode('utf-8').split())
+        except:
+            print("Socket Closed.")
+            s.close()
+            break
+    print("Program Terminated.") 
 
 if __name__ == '__main__': 
     Main() 
