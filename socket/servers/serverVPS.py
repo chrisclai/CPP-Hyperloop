@@ -43,6 +43,8 @@ def Main():
             print("Socket Closed.")
             s.close()
             break
+        else:
+            print(msg)
     print("Program Terminated.") 
 
 if __name__ == '__main__': 
