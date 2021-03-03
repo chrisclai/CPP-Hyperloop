@@ -60,8 +60,9 @@ pod_icon = tk.PhotoImage(file='images\\icons\\pod.png')
 time_icon = tk.PhotoImage(file='images\\icons\\time.png')
 motor_icon = tk.PhotoImage(file='images\\icons\\motor.png')
 progress_icon = ImageTk.PhotoImage(file='images\\icons\\progress.png')
+calib_icon = tk.PhotoImage(file='images\\icons\\calib.png')
 
-hyperloop_background = tk.PhotoImage(file='images\\background\\hyperloop_black_background.png')
+hyperloop_background = tk.PhotoImage(file='images\\background\\2020_2021_background.png')
 
 # HYPERLOOP LOGO
 # Creates and adds Hyperloop Logo to the workspace.
@@ -205,12 +206,12 @@ spacex_com_value.place(x=LABEL_BEGIN_X+20 + 10,y=LABEL_BEGIN_Y + OFFSET)
 # CALIBRATION 
 # Creates workspace for all calibration elements
 # Set bg to 'blue' in motor_canv to see the extent of the workspace.
-CALIB_HEIGHT= MIA
-CALIB_WIDTH= MIA
+CALIB_HEIGHT= 280
+CALIB_WIDTH= 400
 calib_canv = tk.Canvas(main_canv, width=CALIB_WIDTH, height=CALIB_HEIGHT, highlightthickness=0, bg='black') 
-calib_canv.place(x=COL MIA , y= MIA , anchor='nw')
+calib_canv.place(x=COL3 , y= POD_HEIGHT+BAT_HEIGHT+35 , anchor='nw')
 
-calibTitle = tkTitle(master=calib_canv, title="Calibration", iconpos= MIA , titlepos= MIA , icon=calib_icon) # NEED TO IMPLEMENT CALIB ICON
+calibTitle = tkTitle(master=calib_canv, iconpos= 0.5, icon=calib_icon) # NEED TO IMPLEMENT CALIB ICON
 
 x_absOrientation = tkLabelUnit(master=calib_canv, str='X Orientation', val='Error', unit='', list=0)
 y_absOrientation = tkLabelUnit(master=calib_canv, str='Y orientation', val='Error', unit='', list=1)
@@ -220,6 +221,7 @@ calib_gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer', val='Error', u
 calib_accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer', val='Error', unit='', list=5)
 calib_magnometer = tkLabelUnit(master=calib_canv, str='Magnometer', val='Error', unit='', list=6)
 """
+
 # MOTOR
 # Creates workspace for all motor elements.
 # Set bg to 'blue' in motor_canv to see the extent of the workspace.
@@ -240,7 +242,7 @@ motorCurrent = tkLabelUnit(master=motor_canv, str='Motor Current:', val='Error',
 # POD
 # Creates workspace for physical elements of the pod.
 # Set bg to 'blue' in pod_canv to see the extent of the workspace.
-POD_HEIGHT=160
+POD_HEIGHT=120
 POD_WIDTH=400
 pod_canv = tk.Canvas(main_canv, width=POD_WIDTH, height=POD_HEIGHT, highlightthickness=0, bg='black')   
 pod_canv.place(x=COL3, y=35, anchor='nw')
@@ -269,10 +271,10 @@ acceleration_Label = tkLabelUnit(master=kin_canv, str='Acceleration:', val=norma
 # BATTERY
 # Creates workspace for elements relating to battery management.
 # Set bg to 'blue' in bat_canv to see the extent of the workspace.
-BAT_HEIGHT=300
+BAT_HEIGHT=200
 BAT_WIDTH=400
 bat_canv = tk.Canvas(main_canv, width=BAT_WIDTH, height=BAT_HEIGHT, highlightthickness=0, bg='black')   
-bat_canv.place(x=COL3, y=POD_HEIGHT+50, anchor='nw')
+bat_canv.place(x=COL3, y=POD_HEIGHT+35, anchor='nw')
 
 batteryTitle = tkTitle(master=bat_canv, iconpos=0.5, icon=battery_icon)
 
@@ -341,6 +343,28 @@ powerLabel = tk.Label(control_canv, text='Power Status:', bg='black', fg='white'
 powerLabel.place(relx=0.75,rely=0.65, anchor='center')
 powerStatus = tk.Label(control_canv, text='POWER ON', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
 powerStatus.place(relx=0.75,rely=0.8, anchor='center')
+
+
+# Calibration
+# Creates workspace for all calib elements.
+CALIB_HEIGHT=280
+CALIB_WIDTH=400
+calib_canv = tk.Canvas(main_canv, width=CALIB_WIDTH, height=CALIB_HEIGHT, highlightthickness=0, bg='black') 
+calib_canv.place(x=COL3, y=POD_HEIGHT+BAT_HEIGHT+35, anchor='nw')
+
+calibTitle = tkTitle(master=calib_canv, iconpos=0.5, icon=calib_icon)
+
+calibSystem_Label = tkLabelUnit(master=calib_canv, str='System: ', val="error", unit=' ', list=0)
+calibGyro_Label = tkLabelUnit(master=calib_canv, str='Gyro: ', val="error", unit=' ', list=1)
+
+calibAccel_Label = tkLabelUnit(master=calib_canv, str='Accel: ', val="error", unit=' ', list=2)
+calibMagno_Label = tkLabelUnit(master=calib_canv, str='Magno:', val="error", unit=' ', list=3)
+
+calibX_Label = tkLabelUnit(master=calib_canv, str='x: ', val="error", unit=' ', list=4)
+calibY_Label = tkLabelUnit(master=calib_canv, str='y: ', val="error", unit=' ', list=5)
+calibZ_Label = tkLabelUnit(master=calib_canv, str='z: ', val="error", unit=' ', list=6)
+
+
 
 
 # UPDATE / REFRESH
