@@ -38,10 +38,7 @@ REFRESH_RATE = 50   # Measured in milliseconds
 MIN_FLOAT = 0.0
 MAX_FLOAT = 300.0
 DIGITS = 2
-normalUnitArray = []
-for i in range(30):
-    normalUnitArray.append(0)
-    # Initialize / populate the array.
+
 
 
 # INITIALIZATION
@@ -63,8 +60,9 @@ pod_icon = tk.PhotoImage(file='images\\icons\\pod.png')
 time_icon = tk.PhotoImage(file='images\\icons\\time.png')
 motor_icon = tk.PhotoImage(file='images\\icons\\motor.png')
 progress_icon = ImageTk.PhotoImage(file='images\\icons\\progress.png')
+calib_icon = tk.PhotoImage(file='images\\icons\\calib.png')
 
-hyperloop_background = tk.PhotoImage(file='images\\background\\hyperloop_black_background.png')
+hyperloop_background = tk.PhotoImage(file='images\\background\\2020_2021_background.png')
 
 # HYPERLOOP LOGO
 # Creates and adds Hyperloop Logo to the workspace.
@@ -182,7 +180,7 @@ spacex_com_label.place(x=LABEL_BEGIN_X+20,y=LABEL_BEGIN_Y + OFFSET, anchor='ne')
 spacex_com_value = tk.Label(com_canv, text='NOT ESTABLISHED', bg='black', fg='brown3', font=('garamond',11,'bold'), justify='left')
 spacex_com_value.place(x=LABEL_BEGIN_X+20 + 10,y=LABEL_BEGIN_Y + OFFSET)
 
-transSpeed = tkLabelUnit(master=com_canv, str="Transfer Speed:", val=normalUnitArray[0], unit='kB/s', list=2, offsetX=20)
+transSpeed = tkLabelUnit(master=com_canv, str="Transfer Speed:", val="error", unit='kB/s', list=2, offsetX=20)
 
 # MOTOR
 # Creates workspace for all motor elements.
@@ -194,26 +192,26 @@ motor_canv.place(x=COL2, y=35, anchor='nw')
 
 motorTitle = tkTitle(master=motor_canv, iconpos=0.5, icon=motor_icon)
 
-motorVoltage_Label = tkLabelUnit(master=motor_canv, str='Voltage: ', val=normalUnitArray[23], unit='V', list=0)
-motorCurrent_Label = tkLabelUnit(master=motor_canv, str='Current: ', val=normalUnitArray[22], unit='A', list=1)
+motorVoltage_Label = tkLabelUnit(master=motor_canv, str='Voltage: ', val="error", unit='V', list=0)
+motorCurrent_Label = tkLabelUnit(master=motor_canv, str='Current: ', val="error", unit='A', list=1)
 
-motorControllerTemp1_Label = tkLabelUnit(master=motor_canv, str='Controller 1 Temp: ', val=normalUnitArray[0], unit='°C', list=2)
-motorControllerTemp2_Label = tkLabelUnit(master=motor_canv, str='Controller 2 Temp:', val=normalUnitArray[1], unit='°C', list=3)
-motorTemp1_Label = tkLabelUnit(master=motor_canv, str='Motor 1 Temp:', val=normalUnitArray[2], unit='°C', list=4)
-motorTemp2_Label = tkLabelUnit(master=motor_canv, str='Motor 2 Temp:', val=normalUnitArray[3], unit='°C', list=5)
+motorControllerTemp1_Label = tkLabelUnit(master=motor_canv, str='Controller 1 Temp: ', val="error", unit='°C', list=2)
+motorControllerTemp2_Label = tkLabelUnit(master=motor_canv, str='Controller 2 Temp:', val="error", unit='°C', list=3)
+motorTemp1_Label = tkLabelUnit(master=motor_canv, str='Motor 1 Temp:', val="error", unit='°C', list=4)
+motorTemp2_Label = tkLabelUnit(master=motor_canv, str='Motor 2 Temp:', val="error", unit='°C', list=5)
 
 
 # POD
 # Creates workspace for physical elements of the pod.
 # Set bg to 'blue' in pod_canv to see the extent of the workspace.
-POD_HEIGHT=160
+POD_HEIGHT=120
 POD_WIDTH=400
 pod_canv = tk.Canvas(main_canv, width=POD_WIDTH, height=POD_HEIGHT, highlightthickness=0, bg='black')   
 pod_canv.place(x=COL3, y=35, anchor='nw')
 
 podTitle = tkTitle(master=pod_canv, iconpos=0.5, icon=pod_icon)
 
-pressure_Label = tkLabelUnit(master=pod_canv, str='Pressure:', val=normalUnitArray[21], unit='kPa', list=0)
+pressure_Label = tkLabelUnit(master=pod_canv, str='Pressure:', val="error", unit='kPa', list=0)
 
 # KINEMATICS
 # Creates workspace for all motion related elements.
@@ -225,25 +223,25 @@ kin_canv.place(x=COL1, y=COM_HEIGHT+TIME_HEIGHT+30, anchor='nw')
 
 kinematicTitle = tkTitle(master=kin_canv, iconpos=0.5, icon=kin_icon)
 
-distance_Label = tkLabelUnit(master=kin_canv, str='Distance Traveled:', val=normalUnitArray[10], unit='km', list=0)
-velocity_Label = tkLabelUnit(master=kin_canv, str='Pod Speed:', val=normalUnitArray[11], unit='km/h', list=1)
-acceleration_Label = tkLabelUnit(master=kin_canv, str='Acceleration:', val=normalUnitArray[12], unit='km/h²', list=2)
+distance_Label = tkLabelUnit(master=kin_canv, str='Distance Traveled:', val="error", unit='km', list=0)
+velocity_Label = tkLabelUnit(master=kin_canv, str='Pod Speed:', val="error", unit='km/h', list=1)
+acceleration_Label = tkLabelUnit(master=kin_canv, str='Acceleration:', val="error", unit='km/h²', list=2)
 
 # BATTERY
 # Creates workspace for elements relating to battery management.
 # Set bg to 'blue' in bat_canv to see the extent of the workspace.
-BAT_HEIGHT=300
+BAT_HEIGHT=200
 BAT_WIDTH=400
 bat_canv = tk.Canvas(main_canv, width=BAT_WIDTH, height=BAT_HEIGHT, highlightthickness=0, bg='black')   
-bat_canv.place(x=COL3, y=POD_HEIGHT+50, anchor='nw')
+bat_canv.place(x=COL3, y=POD_HEIGHT+35, anchor='nw')
 
 batteryTitle = tkTitle(master=bat_canv, iconpos=0.5, icon=battery_icon)
 
 
-batteryCurrent_Label = tkLabelUnit(master=bat_canv, str='Current:', val=normalUnitArray[24], unit='A', list=0)
-batteryVoltage_Label = tkLabelUnit(master=bat_canv, str='Voltage:', val=normalUnitArray[25], unit='V', list=1)
-batteryLife_Label = tkLabelUnit(master=bat_canv, str='Battery Life:', val=normalUnitArray[26], unit='%', list=2)
-batteryTemp1_Label = tkLabelUnit(master=bat_canv, str='Pack 1 Temp:', val=normalUnitArray[15], unit='°C', list=3)
+batteryCurrent_Label = tkLabelUnit(master=bat_canv, str='Current:', val="error", unit='A', list=0)
+batteryVoltage_Label = tkLabelUnit(master=bat_canv, str='Voltage:', val="error", unit='V', list=1)
+batteryLife_Label = tkLabelUnit(master=bat_canv, str='Battery Life:', val="error", unit='%', list=2)
+batteryTemp1_Label = tkLabelUnit(master=bat_canv, str='Pack 1 Temp:', val="error", unit='°C', list=3)
 
 
 # POD PROGRESS
@@ -299,6 +297,28 @@ powerLabel = tk.Label(control_canv, text='Power Status:', bg='black', fg='white'
 powerLabel.place(relx=0.75,rely=0.65, anchor='center')
 powerStatus = tk.Label(control_canv, text='POWER ON', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
 powerStatus.place(relx=0.75,rely=0.8, anchor='center')
+
+
+# Calibration
+# Creates workspace for all calib elements.
+CALIB_HEIGHT=280
+CALIB_WIDTH=400
+calib_canv = tk.Canvas(main_canv, width=CALIB_WIDTH, height=CALIB_HEIGHT, highlightthickness=0, bg='black') 
+calib_canv.place(x=COL3, y=POD_HEIGHT+BAT_HEIGHT+35, anchor='nw')
+
+calibTitle = tkTitle(master=calib_canv, iconpos=0.5, icon=calib_icon)
+
+calibSystem_Label = tkLabelUnit(master=calib_canv, str='System: ', val="error", unit=' ', list=0)
+calibGyro_Label = tkLabelUnit(master=calib_canv, str='Gyro: ', val="error", unit=' ', list=1)
+
+calibAccel_Label = tkLabelUnit(master=calib_canv, str='Accel: ', val="error", unit=' ', list=2)
+calibMagno_Label = tkLabelUnit(master=calib_canv, str='Magno:', val="error", unit=' ', list=3)
+
+calibX_Label = tkLabelUnit(master=calib_canv, str='x: ', val="error", unit=' ', list=4)
+calibY_Label = tkLabelUnit(master=calib_canv, str='y: ', val="error", unit=' ', list=5)
+calibZ_Label = tkLabelUnit(master=calib_canv, str='z: ', val="error", unit=' ', list=6)
+
+
 
 
 # UPDATE / REFRESH
