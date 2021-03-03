@@ -122,10 +122,16 @@ def updateRandValues():
     motorTemp2.value['text'] = nums[3]
     batterySystemTemp.value['text'] = nums[4]
     # IMU Readings
+    calib_system.value['text'] = nums[5]
+    calib_gyrometer.value['text'] = nums[6]
+    calib_accelerometer.value['text'] = nums[7]
+    calib_magnometer.value['text'] = nums[8]
+
+    x_absOrientation.value['text'] = float(nums[9])
+    y_absOrientation.value['text'] = float(nums[10])
+    z_absOrientation.value['text'] = float(nums[11])
+
     """
-    x_absOrientation.value['text'] = float(nums[5])
-    y_absOrientation.value['text'] = float(nums[6])
-    z_absOrientation.value['text'] = float(nums[7])
     x_angVelocity.value['text'] = float(nums[8])
     y_angVelocity.value['text'] = float(nums[9])
     z_angVelocity.value['text'] = float(nums[10])
@@ -202,25 +208,9 @@ spacex_com_value = tk.Label(com_canv, text='NOT ESTABLISHED', bg='black', fg='br
 spacex_com_value.place(x=LABEL_BEGIN_X+20 + 10,y=LABEL_BEGIN_Y + OFFSET)
 
 """ transSpeed = tkLabelUnit(master=com_canv, str="Transfer Speed:", val=normalUnitArray[0], unit='kB/s', list=2, offsetX=20) """
-"""
-# CALIBRATION 
-# Creates workspace for all calibration elements
-# Set bg to 'blue' in motor_canv to see the extent of the workspace.
-CALIB_HEIGHT= 280
-CALIB_WIDTH= 400
-calib_canv = tk.Canvas(main_canv, width=CALIB_WIDTH, height=CALIB_HEIGHT, highlightthickness=0, bg='black') 
-calib_canv.place(x=COL3 , y= POD_HEIGHT+BAT_HEIGHT+35 , anchor='nw')
 
-calibTitle = tkTitle(master=calib_canv, iconpos= 0.5, icon=calib_icon) # NEED TO IMPLEMENT CALIB ICON
 
-x_absOrientation = tkLabelUnit(master=calib_canv, str='X Orientation', val='Error', unit='', list=0)
-y_absOrientation = tkLabelUnit(master=calib_canv, str='Y orientation', val='Error', unit='', list=1)
-z_absOrientation = tkLabelUnit(master=calib_canv, str='Z Orientation', val='Error', unit='', list=2)
-calib_system = tkLabelUnit(master=calib_canv, str='System', val='Error', unit='', list=3)
-calib_gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer', val='Error', unit='', list=4)
-calib_accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer', val='Error', unit='', list=5)
-calib_magnometer = tkLabelUnit(master=calib_canv, str='Magnometer', val='Error', unit='', list=6)
-"""
+
 
 # MOTOR
 # Creates workspace for all motor elements.
@@ -344,7 +334,25 @@ powerLabel.place(relx=0.75,rely=0.65, anchor='center')
 powerStatus = tk.Label(control_canv, text='POWER ON', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
 powerStatus.place(relx=0.75,rely=0.8, anchor='center')
 
+# CALIBRATION 
+# Creates workspace for all calibration elements
+# Set bg to 'blue' in motor_canv to see the extent of the workspace.
+CALIB_HEIGHT= 280
+CALIB_WIDTH= 400
+calib_canv = tk.Canvas(main_canv, width=CALIB_WIDTH, height=CALIB_HEIGHT, highlightthickness=0, bg='black') 
+calib_canv.place(x=COL3 , y=POD_HEIGHT+BAT_HEIGHT+35 , anchor='nw')
 
+calibTitle = tkTitle(master=calib_canv, iconpos= 0.5, icon=calib_icon) # NEED TO IMPLEMENT CALIB ICON
+
+x_absOrientation = tkLabelUnit(master=calib_canv, str='X Orientation: ', val='Error', unit='°', list=0)
+y_absOrientation = tkLabelUnit(master=calib_canv, str='Y Orientation: ', val='Error', unit='°', list=1)
+z_absOrientation = tkLabelUnit(master=calib_canv, str='Z Orientation: ', val='Error', unit='°', list=2)
+calib_system = tkLabelUnit(master=calib_canv, str='System: ', val='Error', unit='', list=3)
+calib_gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer: ', val='Error', unit='', list=4)
+calib_accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer: ', val='Error', unit='', list=5)
+calib_magnometer = tkLabelUnit(master=calib_canv, str='Magnometer: ', val='Error', unit='', list=6)
+
+"""
 # Calibration
 # Creates workspace for all calib elements.
 CALIB_HEIGHT=280
@@ -363,7 +371,7 @@ calibMagno_Label = tkLabelUnit(master=calib_canv, str='Magno:', val="error", uni
 calibX_Label = tkLabelUnit(master=calib_canv, str='x: ', val="error", unit=' ', list=4)
 calibY_Label = tkLabelUnit(master=calib_canv, str='y: ', val="error", unit=' ', list=5)
 calibZ_Label = tkLabelUnit(master=calib_canv, str='z: ', val="error", unit=' ', list=6)
-
+"""
 
 
 
