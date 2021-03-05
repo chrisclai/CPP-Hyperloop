@@ -12,10 +12,10 @@ def read_write_async(connIn, connOut, addr):
         try:
             msg = connIn.recv(16) # return address of utf 
             connOut.send(msg) # server will receive bytes from GUI and send to raspberry pi
-            print(msg.decode('utf-8'))
+            # print(msg.decode('utf-8'))
         except: 
             print(f"Packet receive attempt to {addr} failed. Closing connection.")
-            connOut.close()
+            connIn.close()
             break
     # server receives(read) 4096 bytes from GUI and send(write) over bytes to raspberry pi 
     # connIn = GUI and connOut = rasp 
