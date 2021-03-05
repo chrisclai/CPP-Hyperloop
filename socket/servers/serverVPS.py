@@ -5,7 +5,7 @@ import time
 from _thread import *
 import threading  
 
-# thread function 
+# thread functions 
 def read_write_async(connIn, connOut, addr): 
     print(f"[NEW CONNECTION] {addr} connected to r-w-a thread.")
     while True:
@@ -25,7 +25,7 @@ def read_write_sync(connIn, connOut, addr):
 
 def Main(): 
     if len(sys.argv) != 1:
-        print("Usage: python3 clientThread.py")
+        print("Usage: python3 serverVPS.py")
         sys.exit(1)
 
     host = "45.56.91.192"
