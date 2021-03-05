@@ -5,23 +5,37 @@ import time
 from _thread import *
 import threading  
 
-# thread functions vikki update async
+# thread functions 
 def read_write_async(connIn, connOut, addr): 
     print(f"[NEW CONNECTION] {addr} connected to r-w-a thread.")
     while True:
-        msg = conn.recv(16).decode('utf-8')
-        print(msg)
-        connOut.send(bytes(msg, 'utf-8'))
+        try:
+            connOut.send(connIn.recv(16)) # server will receive bytes from GUI and send to raspberry pi
+            print(connIn.recv(16).decode('utf-8'))
+        except: 
+            print(f"Packet receive attempt to {addr} failed. Closing connection.")
+            connOut.close()
+            break
+    # server receives(read) 4096 bytes from GUI and send(write) over bytes to raspberry pi 
+    # connIn = GUI and connOut = rasp 
+    # address is from GUI 
 
 def read_write_sync(connIn, connOut, addr):
     print(f"[NEW CONNECTION] {addr} connected to r-w-s thread.")
     while True:
         try:
-            connOut.send(connIn.recv(4096))
+            connOut.send(connIn.recv(4096)) # server will receive bytes from raspberry pi and send to gui
         except:
             print(f"Packet send attempt to {addr} failed. Closing connection.")
             connOut.close()
             break
+    # server gets information and sends information 
+    # server receives(read) 4096 bytes from raspberry pi and send(write) over bytes to GUI 
+    # raspberry pi sends 4096 to server 
+    # gui receives 4096 bytes 
+
+    # connIN = rasp and connOUT = GUI 
+    # address is for GUI 
 
 def Main(): 
     if len(sys.argv) != 1:
@@ -64,8 +78,10 @@ def Main():
                 print(f"Connection from {addr} has been established!")
                 sockdict[conn] = addr
                 print(f"Socket dictionary: {sockdict}")
-                thread = threading.Thread(target = read_write_sync, args=(rpiclientsocket, conn, addr))
-                thread.start()
+                thread_sync = threading.Thread(target = read_write_sync, args=(rpiclientsocket, conn, addr))
+                thread_sync.start()
+                thread_async = threading.Thread(target = read_write_async, args=(conn, rpiclientsocket, addr))
+                thread_async.start()
             except:
                 pass   
     except:
