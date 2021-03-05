@@ -32,7 +32,7 @@ def Main():
 
     print(f"host found on ip: {host}")
 
-    # set port number
+    # set port numbers
     port = 1234
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
     s.bind((host, port)) 
