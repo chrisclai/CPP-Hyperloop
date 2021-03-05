@@ -5,7 +5,7 @@ import time
 from _thread import *
 import threading  
 
-# thread functions 
+# thread functions vikki update async
 def read_write_async(connIn, connOut, addr): 
     print(f"[NEW CONNECTION] {addr} connected to r-w-a thread.")
     while True:
