@@ -27,6 +27,7 @@ def Main():
     serverIP = sys.argv[1]
 
     ser = serial.Serial("/dev/ttyACM0", 115200) # can write and read from it 
+    # ser = serial.Serial("/dev/ttyACM1", 115200)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((serverIP, 1234))
@@ -37,11 +38,11 @@ def Main():
     # rasp pi wants to receive data asynchronously from server 
     while True:
         data = ser.readline() # how rasp pi receiving data from arduino \\ ser.writeline()
+        # tempdata = tempard.readline()
         try:
-                decoded = data.decode('utf-8')
-                print(decoded)
-                s.send(bytes(decoded, 'utf-8')) # send bytes over to socket (server)
-                time.sleep(0.1)
+                print(data.decode('utf-8'))
+                # print(tempdata.decode('utf-8'))
+                s.send(data) # send bytes over to socket (server)
         except UnicodeDecodeError:
                 print("unicode error detected... anyways,")
 
