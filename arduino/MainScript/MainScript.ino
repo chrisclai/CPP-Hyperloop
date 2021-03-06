@@ -126,16 +126,7 @@ void loop() {
   system = gyro = accel = mag = 0;
   bno.getCalibration(&system, &gyro, &accel, &mag);
 
-  // Temperature Sensor Readings [5]
-  if (millis() - lastTempRequest >= delayInMillis)
-  {
-    for (int i = 0;  i < 5;  i++)
-    {
-      sensorData[i] = sensors.getTempCByIndex(i);      
-    }
-    lastTempRequest = millis();
-    sensors.requestTemperatures();
-  }
+  // Temperature Sensor Readings [5] (on another arduino)
 
   // IMU Readings [16]
   sensorData[5] = system;   // System Calibration
