@@ -28,17 +28,19 @@ def Main():
 
     ser = serial.Serial("/dev/ttyACM0", 115200) # can write and read from it 
     # ser = serial.Serial("/dev/ttyACM1", 115200)
+    nano = serial.Serial("/dev/ttyUSB0", 115200)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((serverIP, 1234))
 
     print(f"Connection from {serverIP} has been established!")
-    thread_async = threading.Thread(target = read_write_async, args=(s, ser, serverIP))
+    thread_async = threading.Thread(target = read_write_async, args=(s, nano, serverIP))
     thread_async.start()
     # rasp pi wants to receive data asynchronously from server 
     while True:
         data = ser.readline() # how rasp pi receiving data from arduino \\ ser.writeline()
         # tempdata = tempard.readline()
+        
         try:
                 print(data.decode('utf-8'))
                 # print(tempdata.decode('utf-8'))
