@@ -22,11 +22,14 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 
 // Global Variables
 int deviceCount = 0;
-int resolution = 9;
+int resolution = 12;
 unsigned long lastTempRequest = 0;
 int delayInMillis = 0;
 float temperature = 0.0;
 int idle = 0;
+
+const int len = 32;
+double sensorData[len];
 
 // OneWire communication port (will find any oneWire device)
 OneWire oneWire (tempSensor);
@@ -35,7 +38,7 @@ OneWire oneWire (tempSensor);
 DallasTemperature sensors(&oneWire);
 
 // [Function] Checks to see if serial data has been recieved from the Raspberry Pi
-void RPiSerial()
+String RPiSerial()
 {
   if (Serial.available())
   {
@@ -45,20 +48,25 @@ void RPiSerial()
     {
       digitalWrite(brakeLED1, HIGH);
       digitalWrite(brakeLED2, HIGH);
+      return "brakeon";
     }
     else if (command == "brakeoff")
     {
       digitalWrite(brakeLED1, LOW);
       digitalWrite(brakeLED2, LOW);
+      return "brakeon";
     }
     else if (command == "motoron")
     {
       digitalWrite(DCMotor, HIGH);
+      return "motoron";
     }
     else if (command == "motoroff")
     {
       digitalWrite(DCMotor, LOW);
+      return "motoroff";
     }
+    return "nothing";
   }
 }
 
@@ -74,8 +82,6 @@ void setup() {
 
   pinMode(DCMotor, OUTPUT);
   digitalWrite(DCMotor, LOW);
-
-  randomSeed(analogRead(0));  // Generate Random Numbers
   
   sensors.begin();
 
@@ -91,6 +97,11 @@ void setup() {
   // Serial.print(deviceCount, DEC);
   // Serial.println(" devices.");
   // Serial.println("");
+
+  for (int i = 0; i < len; i++)
+  {
+    sensorData[i] = 0;
+  }
 
   if(!bno.begin())
   {
@@ -115,14 +126,12 @@ void loop() {
   system = gyro = accel = mag = 0;
   bno.getCalibration(&system, &gyro, &accel, &mag);
 
-  double sensorData[30];
-
   // Temperature Sensor Readings [5]
-  if (millis() - lastTempRequest > delayInMillis)
+  if (millis() - lastTempRequest >= delayInMillis)
   {
-    for (int i = 0;  i < deviceCount;  i++)
+    for (int i = 0;  i < 5;  i++)
     {
-      sensorData[i] = sensors.getTempCByIndex(i);
+      sensorData[i] = sensors.getTempCByIndex(i);      
     }
     lastTempRequest = millis();
     sensors.requestTemperatures();
@@ -148,7 +157,7 @@ void loop() {
   sensorData[21] = 0;     // Gravity Vector x-component
   sensorData[22] = 0;     // Gravity Vector y-component
   sensorData[23] = 0;     // Gravity Vector z-component
-  sensorData[24] = 0;  // Ambient Temperature IMU
+  sensorData[24] = 0;     // Ambient Temperature IMU
 
   // Pressure Sensor [1]
   sensorData[25] = 0; // Pressure in kPa
@@ -160,14 +169,33 @@ void loop() {
   sensorData[29] = 0;  // Battery Current (mA)
   sensorData[30] = 0;  // Battery Capacity (%)
 
+  // Output Status [2]
+  String inputStat = RPiSerial();
+  if (inputStat != "nothing")
+  {
+    if (inputStat == "brakeon")
+    {
+      sensorData[31] = 1;
+    }
+    else if (inputStat == "brakeoff")
+      sensorData[31] = 0;
+    }
+    else if (inputStat == "motoron")
+    {
+      sensorData[32] = 1;
+    }
+    else if (inputStat == "motoroff")
+    {
+      sensorData[32] = 0;
+    }
+  }
+
   String printString = "";
-  for (int i = 0; i < 27; i++)
+  for (int i = 0; i < len; i++)
   {
     printString += String(sensorData[i]) + " ";
   }
   Serial.println(printString);
-  
-  RPiSerial();
 
-  delay(100);
+  delay(50);
 }
