@@ -11,11 +11,10 @@ def read_write_async(connIn, connOut, addr):
     while True:
         try:
             msg = connIn.recv(16)
-            connOut.writeline(msg)
+            connOut.write(msg)
             print(msg.decode('utf-8'))
         except: 
             print(f"Packet write attempt to {addr} failed. Closing connection.")
-            connIn.close()
             break
         # connIn = server ; connOut = arduino - doesn't have addr; it is serial 
         # addr is from server 
