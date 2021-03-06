@@ -178,6 +178,7 @@ void loop() {
       sensorData[31] = 1;
     }
     else if (inputStat == "brakeoff")
+    {
       sensorData[31] = 0;
     }
     else if (inputStat == "motoron")
