@@ -198,5 +198,5 @@ void loop() {
   }
   Serial.println(printString);
 
-  delay(100);
+  delay(200);
 }

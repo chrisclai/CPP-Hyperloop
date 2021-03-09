@@ -102,7 +102,7 @@ def updateRandValues():
 
     message = s.recv(4096)
     nums = message.decode('utf-8').split()
-    print(nums)
+    # print(nums)
 
     # Sensors
     TempSensorMotorController1.value['text'] = nums[0]
@@ -110,6 +110,7 @@ def updateRandValues():
     TempSensorMentor1.value['text'] = nums[2]
     TempSensorMentor2.value['text'] = nums[3]
     TempSensorBatterySystem.value['text'] = nums[4]
+    
     # IMU Readings
     IMU_System.value['text'] = nums[5]
     IMU_Gyrometer.value['text'] = nums[6]
@@ -135,26 +136,31 @@ def updateRandValues():
     IMU_AccelerometerAcc_Z.value['text'] = float(nums[23])
     IMU_AccelerometerAcc_Z.value['text'] = float(nums[23])
     IMU_BoardTemperature.value['text'] = float(nums[27])
+    
     # Pressure Sensor 
     kPa_Pressure.value['text'] = nums[28]
+    
     # Current + Voltage Sensor
     Motor_Voltage.value['text'] = nums[29]
     Motor_Current.value['text'] = nums[30]
     Battery_Current.value['text'] = nums[31]
     Battery_Current.value['text'] = nums[32]
     Battery_Capacity.value['text'] = nums[33]
+    
     # Speed Laser 
     SpeedLaser.value['text'] = nums[34]
+    
     # Output
     OP_BrakeActuator1.value['text'] = nums[35]
     OP_BrakeActuator2.value['text'] = nums[36]
     OP_MotorController1.value['text'] = nums[37]
     OP_MotorController2.value['text'] = nums[38]
     """
+    
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
 
-# totally useful function.
+# actually useful function now
 def brakeToggle():
     global brake_status
     if not brake_status: # if the brake is currently off
@@ -349,27 +355,6 @@ IMU_System = tkLabelUnit(master=calib_canv, str='System: ', val='Error', unit=''
 IMU_Gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer: ', val='Error', unit='', list=4)
 IMU_Accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer: ', val='Error', unit='', list=5)
 IMU_Magnometer = tkLabelUnit(master=calib_canv, str='Magnometer: ', val='Error', unit='', list=6)
-
-"""
-# Calibration
-# Creates workspace for all calib elements.
-CALIB_HEIGHT=280
-CALIB_WIDTH=400
-calib_canv = tk.Canvas(main_canv, width=CALIB_WIDTH, height=CALIB_HEIGHT, highlightthickness=0, bg='black') 
-calib_canv.place(x=COL3, y=POD_HEIGHT+BAT_HEIGHT+35, anchor='nw')
-
-calibTitle = tkTitle(master=calib_canv, iconpos=0.5, icon=calib_icon)
-
-calibSystem_Label = tkLabelUnit(master=calib_canv, str='System: ', val="error", unit=' ', list=0)
-calibGyro_Label = tkLabelUnit(master=calib_canv, str='Gyro: ', val="error", unit=' ', list=1)
-
-calibAccel_Label = tkLabelUnit(master=calib_canv, str='Accel: ', val="error", unit=' ', list=2)
-calibMagno_Label = tkLabelUnit(master=calib_canv, str='Magno:', val="error", unit=' ', list=3)
-
-calibX_Label = tkLabelUnit(master=calib_canv, str='x: ', val="error", unit=' ', list=4)
-calibY_Label = tkLabelUnit(master=calib_canv, str='y: ', val="error", unit=' ', list=5)
-calibZ_Label = tkLabelUnit(master=calib_canv, str='z: ', val="error", unit=' ', list=6)
-"""
 
 # UPDATE / REFRESH
 # This is start calling the update function which is recursive.
