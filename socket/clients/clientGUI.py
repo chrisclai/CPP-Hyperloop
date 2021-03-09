@@ -106,8 +106,7 @@ def updateRandValues():
 
     message = s.recv(4096)
     nums = message.decode('utf-8').split()
-    print(nums)
-
+    # print(nums)
 
     motorControllerTemp1.value['text'] = nums[0]
     motorControllerTemp2.value['text'] = nums[1]
@@ -150,8 +149,8 @@ def updateRandValues():
     batteryCapacity.value['text'] = nums[33]
 
     # 
-    brakeButton.command = int(nums[31]) # status of brakes
-    motorButton.command = int(nums[32]) # status of motors
+    brakeButton.command = int(nums[34]) # status of brakes
+    motorButton.command = int(nums[35]) # status of motors
 
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
@@ -321,7 +320,7 @@ brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',18,'bold')
 brakeButton.place(relx=0.25,rely=0.40,anchor='center')
 brakeLabel = tk.Label(control_canv, text='Brake Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
 brakeLabel.place(relx=0.25,rely=0.65, anchor='center')
-brakeStatus = tk.Label(control_canv, textvariable=click, bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
+brakeStatus = tk.Label(control_canv, textvariable='DISENGAGED', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
 brakeStatus.place(relx=0.25,rely=0.8, anchor='center')
 
 motorButton = tk.Button(control_canv, text="POWER", font=('garamond',18,'bold'), command=motorToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
