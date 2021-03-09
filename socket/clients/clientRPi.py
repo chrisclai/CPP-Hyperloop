@@ -6,11 +6,17 @@ import socket
 from _thread import *
 import threading
 
+DATA_AMOUNT = 36
+
 global templist
 templist = [0, 0, 0, 0, 0]
 
 global controllist
 controllist = [0, 0]
+
+global mainlist
+for i in range(0, DATA_AMOUNT):
+    mainlist[i] = 0
 
 def control(connIn, connOut, addr): 
     print(f"[CONTROL] {addr} Successfully connected to control thread!")
@@ -41,6 +47,7 @@ def maindata(connIn, connOut, addr):
     print(f"[MAIN] {addr} Successfully connected to main thread!")
     global templist
     global controllist
+    global mainlist
     while True:
         # how rasp pi receiving data from arduino \\ ser.writeline()
         try:
@@ -59,12 +66,8 @@ def maindata(connIn, connOut, addr):
             data[35] = controllist[1]
         except:
             print("Control list segment at fault. Trying again...")
-        # create string again with all of the list elements and send them out to the GUI
-        dataSend = ""
-        for x in data:
-            dataSend += str(x)  + " "
-        print(dataSend)
-        connOut.send(bytes(dataSend, 'utf-8'))
+        for x in range(0, DATA_AMOUNT):
+            mainlist[x] = data[x]
         
 def tempdata(connIn, connOut, addr): 
     print(f"[TEMP] {addr} Successfully connected to tempdata thread!")
@@ -73,6 +76,17 @@ def tempdata(connIn, connOut, addr):
         tempdataUNO = connIn.readline().decode('utf-8').split()
         for x in range(0, 5):
             templist[x] = tempdataUNO[x]
+
+def senddata(connOut, addr): 
+    print(f"[DATA] {addr} Successfully connected to main data stream thread!")
+    global mainlist
+    while True:
+        # create string again with all of the list elements and send them out to the GUI
+        dataSend = ""
+        for x in mainlist:
+            dataSend += str(x)  + " "
+            print(dataSend)
+            connOut.send(bytes(dataSend, 'utf-8'))
 
 def Main():
     if len(sys.argv) != 2:
@@ -101,6 +115,11 @@ def Main():
     # [THREAD] Off-Sync thread to recieve temperature data from UNO
     thread_temp = threading.Thread(target = tempdata, args=(serUno, s, serverIP))
     thread_temp.start()
+
+    # [THREAD] Thread to send data to GUI (prevents arduino from getting stuck)
+    thread_data = threading.Thread(target = senddata, args=(s, serverIP))
+    thread_data.start()
+
 
 
 if __name__ == '__main__': 

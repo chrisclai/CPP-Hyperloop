@@ -21,7 +21,7 @@ int  delayInMillis = 0;
 float temperature = 0.0;
 int  idle = 0;
 
-const int len = 6;
+const int len = 5;
 double sensorData[len];
 
 //
@@ -34,8 +34,6 @@ void setup(void)
   // Serial.print("Library Version: ");
   // Serial.println(DALLASTEMPLIBVERSION);
   // Serial.println("\n");
-
-  sensorData[0] = -1;
 
   sensors.begin();
   sensors.getAddress(tempDeviceAddress, 0);
@@ -56,9 +54,9 @@ void loop(void)
   {
     digitalWrite(13, LOW);
     // Serial.println(" Temperature: ");
-    for (int i = 1;  i < len;  i++)
+    for (int i = 0;  i < len;  i++)
     {
-      sensorData[i] = sensors.getTempCByIndex(i - 1);     
+      sensorData[i] = sensors.getTempCByIndex(i);     
     } 
     // Serial.print("  Resolution: ");
     // Serial.println(resolution); 
