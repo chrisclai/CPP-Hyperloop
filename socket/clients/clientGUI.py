@@ -132,9 +132,9 @@ def updateRandValues():
     IMU_GravityAcc_Z.value['text'] = float(nums[21])
     IMU_GravityAcc_Y.value['text'] = float(nums[22])
     IMU_GravityAcc_Z.value['text'] = float(nums[23])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[23])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[23])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[23])
+    IMU_AccelerometerAcc_Z.value['text'] = float(nums[24])
+    IMU_AccelerometerAcc_Z.value['text'] = float(nums[25])
+    IMU_AccelerometerAcc_Z.value['text'] = float(nums[26])
     IMU_BoardTemperature.value['text'] = float(nums[27])
     
     # Pressure Sensor 
@@ -148,14 +148,14 @@ def updateRandValues():
     Battery_Capacity.value['text'] = nums[33]
     
     # Speed Laser 
-    SpeedLaser.value['text'] = nums[34]
-    
-    # Output
-    OP_BrakeActuator1.value['text'] = nums[35]
-    OP_BrakeActuator2.value['text'] = nums[36]
-    OP_MotorController1.value['text'] = nums[37]
-    OP_MotorController2.value['text'] = nums[38]
+    SpeedLaser.value['text'] = nums[???]
     """
+
+    # Output
+    global brake_status
+    global motor_status
+    brake_status = nums[34]
+    motor_status = nums[35]
     
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
