@@ -32,12 +32,13 @@ LOGO_WIDTH=373
 ICON_HEIGHT=60
 ICON_WIDTH=60
 
-# UPDATE RANDOM NUMBER TEST
+# GLOBAL CONTROL VALUES
 # Tests to see if label values can change without issues.
 REFRESH_RATE = 50   # Measured in milliseconds
-MIN_FLOAT = 0.0
-MAX_FLOAT = 300.0
-DIGITS = 2
+global brake_status
+global motor_status
+brake_status = False
+motor_status = False
 
 # normal unit array = replace with error 
 
@@ -103,15 +104,17 @@ class tkLabelUnit:
 # Will assign random numbers to values whenever called.
 def updateRandValues():
 
-    message = s.recv(2048)
+    message = s.recv(4096)
     nums = message.decode('utf-8').split()
     print(nums)
+
 
     motorControllerTemp1.value['text'] = nums[0]
     motorControllerTemp2.value['text'] = nums[1]
     motorTemp1.value['text'] = nums[2]
     motorTemp2.value['text'] = nums[3]
     batterySystemTemp.value['text'] = nums[4]
+    
     # IMU Readings
     calib_system.value['text'] = nums[5]
     calib_gyrometer.value['text'] = nums[6]
@@ -122,28 +125,29 @@ def updateRandValues():
     y_absOrientation.value['text'] = float(nums[10])
     z_absOrientation.value['text'] = float(nums[11])
     """
-    x_angVelocity.value['text'] = float(nums[8])
-    y_angVelocity.value['text'] = float(nums[9])
-    z_angVelocity.value['text'] = float(nums[10])
-    x_acceleration.value['text'] = float(nums[11])
-    y_acceleration.value['text'] = float(nums[12])
-    z_acceleration.value['text'] = float(nums[13])
-    x_linearAcceleration.value['text'] = float(nums[14])
-    y_linearAcceleration.value['text'] = float(nums[15])
-    z_linearAcceleration.value['text'] = float(nums[16])
-    x_gravity.value['text'] = float(nums[17])
-    y_gravity.value['text'] = float(nums[18])
-    z_gravity.value['text'] = float(nums[19])
-    ambient_temp.value['text'] = float(nums[20])
+    x_angVelocity.value['text'] = float(nums[12])
+    y_angVelocity.value['text'] = float(nums[13])
+    z_angVelocity.value['text'] = float(nums[14])
+    x_acceleration.value['text'] = float(nums[24])
+    y_acceleration.value['text'] = float(nums[25])
+    z_acceleration.value['text'] = float(nums[26])
+    x_linearAcceleration.value['text'] = float(nums[18])
+    y_linearAcceleration.value['text'] = float(nums[19])
+    z_linearAcceleration.value['text'] = float(nums[20])
+    x_gravity.value['text'] = float(nums[21])
+    y_gravity.value['text'] = float(nums[22])
+    z_gravity.value['text'] = float(nums[23])
+    ambient_temp.value['text'] = float(nums[27])
     """
     # Pressure Sensor 
-    kPa_Pressure.value['text'] = nums[21]
+    kPa_Pressure.value['text'] = nums[28]
+
     # Current + Voltage Sensor
-    motorVoltage.value['text'] = nums[22]
-    motorCurrent.value['text'] = nums[23]
-    batteryVoltage.value['text'] = nums[24]
-    batteryCurrent.value['text'] = nums[25]
-    batteryCapacity.value['text'] = nums[26]
+    motorVoltage.value['text'] = nums[29]
+    motorCurrent.value['text'] = nums[30]
+    batteryVoltage.value['text'] = nums[31]
+    batteryCurrent.value['text'] = nums[32]
+    batteryCapacity.value['text'] = nums[33]
 
     # 
     brakeButton.command = int(nums[31]) # status of brakes
@@ -152,32 +156,28 @@ def updateRandValues():
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
 
-    message = s.recv(2048)
-    nums = message.decode('utf-8').split()
-    print(nums)
-
-"""
 # totally useful function.
-def brake_status(): # element 31 = brakes; element 32 = motors
-    if brakes == 0: 
-        s.send(bytes('brakeon', 'utf-8')) 
-        print('brake on')
-    elif brakes == 1: 
-        s.send(bytes('brakeoff', 'utf-8')) 
-        print('brake off')
-    else:
-        pass
+def brakeToggle():
+    global brake_status
+    if not brake_status: # if the brake is currently off
+        s.send(bytes('brakeon', 'utf-8'))
+        brake_status = True
+        print('brakeon')
+    else: # if the brake is currently on
+        s.send(bytes('brakeoff', 'utf-8'))
+        brake_status = False
+        print('brakeoff')
 
-def motor_status():
-    if motors == 0: 
-        s.send(bytes('motoron', 'utf-8')) 
-        print('motor on')
-    elif motors == 1: 
-        s.send(bytes('motoroff', 'utf-8')) 
-        print('motor off')
-    else:
-        pass
-"""
+def motorToggle():
+    global motor_status
+    if not motor_status: # if the motor is currently off
+        s.send(bytes('motoron', 'utf-8'))
+        motor_status = True
+        print('motoron')
+    else: # if the brake is currently on
+        s.send(bytes('motoroff', 'utf-8'))
+        motor_status = False
+        print('motoroff')
 
 # TIME
 # Creates workspace for all time elements.
@@ -256,13 +256,11 @@ KIN_WIDTH=400
 kin_canv = tk.Canvas(main_canv, width=KIN_WIDTH, height=KIN_HEIGHT, highlightthickness=0, bg='black')   
 kin_canv.place(x=COL1, y=COM_HEIGHT+TIME_HEIGHT+30, anchor='nw')
 
+# change later pls
 kinematicTitle = tkTitle(master=kin_canv, iconpos=0.5, icon=kin_icon)
-
-"""
-distance_Label = tkLabelUnit(master=kin_canv, str='Distance Traveled:', val=normalUnitArray[10], unit='km', list=0)
-velocity_Label = tkLabelUnit(master=kin_canv, str='Pod Speed:', val=normalUnitArray[11], unit='km/h', list=1)
-acceleration_Label = tkLabelUnit(master=kin_canv, str='Acceleration:', val=normalUnitArray[12], unit='km/h²', list=2)
-"""
+distance_Label = tkLabelUnit(master=kin_canv, str='Distance Traveled:', val="0", unit='km', list=0)
+velocity_Label = tkLabelUnit(master=kin_canv, str='Pod Speed:', val="0", unit='km/h', list=1)
+acceleration_Label = tkLabelUnit(master=kin_canv, str='Acceleration:', val="0", unit='km/h²', list=2)
 
 # BATTERY
 # Creates workspace for elements relating to battery management.
@@ -309,16 +307,6 @@ progressIcon = tk.Canvas(prog_canv, width=40, height=40, highlightthickness=0,bg
 progressIcon.place(x=LINE_START_X+PROGRESS_X,y=LINE_HEIGHT,anchor='center')
 progressIcon.create_image(0,0,anchor='nw', image=progress_icon)
 
-button_swtich = True
-def click():
-    global button_swtich
-    if button_switch:
-        button_switch = False
-        brakeStatus.text = "Disengaged"
-    else:
-        button_swtich = True
-        brakeStatus.text = "Engaged"
-
 # BUTTONS / CONTROL
 # Creates workspace for buttons.
 # Set bg to 'blue' in control_canv to see the extent of the workspace.
@@ -328,14 +316,15 @@ CONTROL_WIDTH = 450
 control_canv = tk.Canvas(main_canv, width=CONTROL_WIDTH, height=CONTROL_HEIGHT, highlightthickness=0, bg='black')   
 control_canv.place(x=COL2-40, y=TIME_HEIGHT+COM_HEIGHT+50, anchor='nw')
 
-brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',18,'bold'), command='', justify='center', padx=40, pady=10, bg='black', fg='red')
+
+brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',18,'bold'), command=brakeToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
 brakeButton.place(relx=0.25,rely=0.40,anchor='center')
 brakeLabel = tk.Label(control_canv, text='Brake Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
 brakeLabel.place(relx=0.25,rely=0.65, anchor='center')
 brakeStatus = tk.Label(control_canv, textvariable=click, bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
 brakeStatus.place(relx=0.25,rely=0.8, anchor='center')
 
-motorButton = tk.Button(control_canv, text="MOTOR", font=('garamond',18,'bold'), command='', justify='center', padx=40, pady=10, bg='black', fg='red')
+motorButton = tk.Button(control_canv, text="POWER", font=('garamond',18,'bold'), command=motorToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
 motorButton.place(relx=0.75,rely=0.40,anchor='center')
 motorLabel = tk.Label(control_canv, text='Motor Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
 motorLabel.place(relx=0.75,rely=0.65, anchor='center')
@@ -359,6 +348,27 @@ calib_system = tkLabelUnit(master=calib_canv, str='System: ', val='Error', unit=
 calib_gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer: ', val='Error', unit='', list=4)
 calib_accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer: ', val='Error', unit='', list=5)
 calib_magnometer = tkLabelUnit(master=calib_canv, str='Magnometer: ', val='Error', unit='', list=6)
+
+"""
+# Calibration
+# Creates workspace for all calib elements.
+CALIB_HEIGHT=280
+CALIB_WIDTH=400
+calib_canv = tk.Canvas(main_canv, width=CALIB_WIDTH, height=CALIB_HEIGHT, highlightthickness=0, bg='black') 
+calib_canv.place(x=COL3, y=POD_HEIGHT+BAT_HEIGHT+35, anchor='nw')
+
+calibTitle = tkTitle(master=calib_canv, iconpos=0.5, icon=calib_icon)
+
+calibSystem_Label = tkLabelUnit(master=calib_canv, str='System: ', val="error", unit=' ', list=0)
+calibGyro_Label = tkLabelUnit(master=calib_canv, str='Gyro: ', val="error", unit=' ', list=1)
+
+calibAccel_Label = tkLabelUnit(master=calib_canv, str='Accel: ', val="error", unit=' ', list=2)
+calibMagno_Label = tkLabelUnit(master=calib_canv, str='Magno:', val="error", unit=' ', list=3)
+
+calibX_Label = tkLabelUnit(master=calib_canv, str='x: ', val="error", unit=' ', list=4)
+calibY_Label = tkLabelUnit(master=calib_canv, str='y: ', val="error", unit=' ', list=5)
+calibZ_Label = tkLabelUnit(master=calib_canv, str='z: ', val="error", unit=' ', list=6)
+"""
 
 # UPDATE / REFRESH
 # This is start calling the update function which is recursive.
