@@ -39,16 +39,21 @@ def control(connIn, connOut, addr):
 
 def maindata(connIn, connOut, addr): 
     print(f"[MAIN] {addr} Successfully connected to main thread!")
+    global templist
+    global controllist
     while True:
         # how rasp pi receiving data from arduino \\ ser.writeline()
         try:
             data = connIn.readline().decode('utf-8').split()
-            print(data)
+            # print(data)
         except UnicodeDecodeError:
             print("unicode error detected... anyways,")
         # update main data list with information from the temperature sensor readings and control readings
         for x in range(0, 5):
-            data[x] = tempdata[x]
+            try:
+                data[x] = templist[x]
+            except:
+                pass
         try:
             data[34] = controllist[0]
             data[35] = controllist[1]
@@ -56,17 +61,18 @@ def maindata(connIn, connOut, addr):
             print("Control list segment at fault. Trying again...")
         # create string again with all of the list elements and send them out to the GUI
         dataSend = ""
-        for x in range data:
-            dataSend += x  + " "
+        for x in data:
+            dataSend += str(x)  + " "
+        print(dataSend)
         connOut.send(bytes(dataSend, 'utf-8'))
         
 def tempdata(connIn, connOut, addr): 
     print(f"[TEMP] {addr} Successfully connected to tempdata thread!")
     global templist
     while True:
-        tempdata = connIn.readline().decode('utf-8').split()
+        tempdataUNO = connIn.readline().decode('utf-8').split()
         for x in range(0, 5):
-            templist[x] = tempdata[x]
+            templist[x] = tempdataUNO[x]
 
 def Main():
     if len(sys.argv) != 2:
