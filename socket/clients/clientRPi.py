@@ -37,6 +37,9 @@ def Main():
     thread_async = threading.Thread(target = read_write_async, args=(s, nano, serverIP))
     thread_async.start()
     # rasp pi wants to receive data asynchronously from server 
+    
+    time.sleep(3)
+    
     while True:
         data = ser.readline() # how rasp pi receiving data from arduino \\ ser.writeline()
         # tempdata = tempard.readline()
