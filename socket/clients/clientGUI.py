@@ -163,29 +163,27 @@ def updateRandValues():
 # actually useful function now
 def brakeToggle():
     global brake_status
-    if not brake_status: # if the brake is currently off
+    print(brake_status)
+    if brake_status == '0': # if the brake is currently off
         s.send(bytes('brakeon', 'utf-8'))
-        brake_status = True
-        brakeStatus['text'] = "MOTOR ON"
-        print('brakeon')
+        brakeStatus['text'] = "BRAKE ON"
+        #print(brake_status)
     else: # if the brake is currently on
         s.send(bytes('brakeoff', 'utf-8'))
-        brake_status = False
-        brakeStatus['text']= "MOTOR OFF"
-        print('brakeoff')
+        brakeStatus['text']= "BRAKE OFF"
+        #print(brake_status)
 
 def motorToggle():
     global motor_status
-    if not motor_status: # if the motor is currently off
+    print(motor_status)
+    if motor_status == '0': # if the motor is currently off
         s.send(bytes('motoron', 'utf-8'))
-        motor_status = True
         motorStatus['text'] = "MOTOR ON"
-        print('motoron')
+        #print('motoron')
     else: # if the brake is currently on
         s.send(bytes('motoroff', 'utf-8'))
-        motor_status = False
         motorStatus['text']= "MOTOR OFF"
-        print('motoroff')
+        #print('motoroff')
 
 # TIME
 # Creates workspace for all time elements.
@@ -328,7 +326,7 @@ brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',18,'bold')
 brakeButton.place(relx=0.25,rely=0.40,anchor='center')
 brakeLabel = tk.Label(control_canv, text='Brake Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
 brakeLabel.place(relx=0.25,rely=0.65, anchor='center')
-brakeStatus = tk.Label(control_canv, text='BRAKE ON', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
+brakeStatus = tk.Label(control_canv, text='BRAKE OFF', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
 brakeStatus.place(relx=0.25,rely=0.8, anchor='center')
 
 motorButton = tk.Button(control_canv, text="POWER", font=('garamond',18,'bold'), command=motorToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
