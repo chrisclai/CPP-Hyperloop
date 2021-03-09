@@ -155,7 +155,15 @@ def updateRandValues():
     global brake_status
     global motor_status
     brake_status = nums[34]
+    if brake_status == '1':
+        brakeStatus['text'] = "BRAKE ON"
+    else:
+        brakeStatus['text'] = "BRAKE OFF"
     motor_status = nums[35]
+    if motor_status == '1':
+        motorStatus['text'] = "MOTOR ON"
+    else:
+        motorStatus['text'] = "MOTOR OFF"
     
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
@@ -163,27 +171,17 @@ def updateRandValues():
 # actually useful function now
 def brakeToggle():
     global brake_status
-    print(brake_status)
     if brake_status == '0': # if the brake is currently off
         s.send(bytes('brakeon', 'utf-8'))
-        brakeStatus['text'] = "BRAKE ON"
-        #print(brake_status)
     else: # if the brake is currently on
         s.send(bytes('brakeoff', 'utf-8'))
-        brakeStatus['text']= "BRAKE OFF"
-        #print(brake_status)
 
 def motorToggle():
     global motor_status
-    print(motor_status)
     if motor_status == '0': # if the motor is currently off
         s.send(bytes('motoron', 'utf-8'))
-        motorStatus['text'] = "MOTOR ON"
-        #print('motoron')
     else: # if the brake is currently on
         s.send(bytes('motoroff', 'utf-8'))
-        motorStatus['text']= "MOTOR OFF"
-        #print('motoroff')
 
 # TIME
 # Creates workspace for all time elements.
