@@ -25,19 +25,22 @@ def control(connIn, connOut, addr):
         try:
             msg = connIn.recv(16).decode('utf-8')
             print(msg)
-            connOut.write(msg.encode('utf-8'))
-            if msg == "brakeoff":
-                controllist[0] = 0
+            if not msg:
                 pass
-            elif msg == "brakeon":
-                controllist[0] = 1
-                pass
-            elif msg == "motoroff":
-                controllist[1] = 0
-                pass
-            elif msg == "motoron":
-                controllist[1] = 1
-                pass
+            else:
+                connOut.write(msg.encode('utf-8'))
+                if msg == "brakeoff":
+                    controllist[0] = 0
+                    pass
+                elif msg == "brakeon":
+                    controllist[0] = 1
+                    pass
+                elif msg == "motoroff":
+                    controllist[1] = 0
+                    pass
+                elif msg == "motoron":
+                    controllist[1] = 1
+                    pass
         except: 
             print("Could not send command into arduino!!!")
         # connIn = server ; connOut = arduino - doesn't have addr; it is serial 
@@ -119,8 +122,6 @@ def Main():
     # [THREAD] Thread to send data to GUI (prevents arduino from getting stuck)
     thread_data = threading.Thread(target = senddata, args=(s, serverIP))
     thread_data.start()
-
-
-
+    
 if __name__ == '__main__': 
     Main() 
