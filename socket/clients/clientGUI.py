@@ -132,9 +132,9 @@ def updateRandValues():
     IMU_GravityAcc_Z.value['text'] = float(nums[21])
     IMU_GravityAcc_Y.value['text'] = float(nums[22])
     IMU_GravityAcc_Z.value['text'] = float(nums[23])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[23])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[23])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[23])
+    IMU_AccelerometerAcc_Z.value['text'] = float(nums[24])
+    IMU_AccelerometerAcc_Z.value['text'] = float(nums[25])
+    IMU_AccelerometerAcc_Z.value['text'] = float(nums[26])
     IMU_BoardTemperature.value['text'] = float(nums[27])
     
     # Pressure Sensor 
@@ -148,14 +148,22 @@ def updateRandValues():
     Battery_Capacity.value['text'] = nums[33]
     
     # Speed Laser 
-    SpeedLaser.value['text'] = nums[34]
-    
-    # Output
-    OP_BrakeActuator1.value['text'] = nums[35]
-    OP_BrakeActuator2.value['text'] = nums[36]
-    OP_MotorController1.value['text'] = nums[37]
-    OP_MotorController2.value['text'] = nums[38]
+    SpeedLaser.value['text'] = nums[???]
     """
+
+    # Output
+    global brake_status
+    global motor_status
+    brake_status = nums[34]
+    if brake_status == '1':
+        brakeStatus['text'] = "BRAKE ON"
+    else:
+        brakeStatus['text'] = "BRAKE OFF"
+    motor_status = nums[35]
+    if motor_status == '1':
+        motorStatus['text'] = "MOTOR ON"
+    else:
+        motorStatus['text'] = "MOTOR OFF"
     
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
@@ -163,29 +171,17 @@ def updateRandValues():
 # actually useful function now
 def brakeToggle():
     global brake_status
-    if not brake_status: # if the brake is currently off
+    if brake_status == '0': # if the brake is currently off
         s.send(bytes('brakeon', 'utf-8'))
-        brake_status = True
-        brakeStatus['text'] = "MOTOR ON"
-        print('brakeon')
     else: # if the brake is currently on
         s.send(bytes('brakeoff', 'utf-8'))
-        brake_status = False
-        brakeStatus['text']= "MOTOR OFF"
-        print('brakeoff')
 
 def motorToggle():
     global motor_status
-    if not motor_status: # if the motor is currently off
+    if motor_status == '0': # if the motor is currently off
         s.send(bytes('motoron', 'utf-8'))
-        motor_status = True
-        motorStatus['text'] = "MOTOR ON"
-        print('motoron')
     else: # if the brake is currently on
         s.send(bytes('motoroff', 'utf-8'))
-        motor_status = False
-        motorStatus['text']= "MOTOR OFF"
-        print('motoroff')
 
 # TIME
 # Creates workspace for all time elements.
@@ -328,7 +324,7 @@ brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',18,'bold')
 brakeButton.place(relx=0.25,rely=0.40,anchor='center')
 brakeLabel = tk.Label(control_canv, text='Brake Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
 brakeLabel.place(relx=0.25,rely=0.65, anchor='center')
-brakeStatus = tk.Label(control_canv, text='BRAKE ON', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
+brakeStatus = tk.Label(control_canv, text='BRAKE OFF', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
 brakeStatus.place(relx=0.25,rely=0.8, anchor='center')
 
 motorButton = tk.Button(control_canv, text="POWER", font=('garamond',18,'bold'), command=motorToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
