@@ -2,6 +2,7 @@ import sys
 import socket
 import tkinter as tk
 from PIL import Image, ImageTk
+from ping3 import ping, verbose_ping
 import random
 
 if len(sys.argv) != 2:
@@ -25,6 +26,7 @@ LABEL_BEGIN_Y = 70
 COL1 = 0
 COL2 = 410
 COL3 = 820
+COL4 = 600
 
 # IMAGE PIXEL SIZE REFERENCE
 LOGO_HEIGHT=166
@@ -151,6 +153,11 @@ def updateRandValues():
     SpeedLaser.value['text'] = nums[???]
     """
 
+    # PING 
+    # Ping_RPI_Server.value['text'] = nums[36]
+    Ping_GUI_Server.value['text'] = ping('45.79.89.135', unit='ms') 
+    # print (ping('45.79.89.135')) 
+
     # Output
     global brake_status
     global motor_status
@@ -182,6 +189,17 @@ def motorToggle():
         s.send(bytes('motoron', 'utf-8'))
     else: # if the brake is currently on
         s.send(bytes('motoroff', 'utf-8'))
+
+# PING
+PING_HEIGHT = 50
+PING_WIDTH = 50
+ping_canv = tk.Canvas(main_canv, width=PING_WIDTH, height=PING_HEIGHT, highlightthickness=0, bg="black")
+ping_canv.place(x=COL4, y=35, anchor='nw')
+
+# Ping_RPI_Server = tkLabelUnit(master=ping_canv,str='Ping: ',val="Error",unit="ms",list=0)
+Ping_GUI_Server_label = tk.Label(ping_canv, text='GUI -> SERVER:', bg='black', fg='white', font=('garamond',11,),justify='right')
+Ping_GUI_Server = tkLabelUnit(master=ping_canv,str='Ping: ',val="Error",unit="ms",list=0)
+
 
 # TIME
 # Creates workspace for all time elements.
