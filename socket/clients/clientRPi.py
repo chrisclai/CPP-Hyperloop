@@ -45,6 +45,7 @@ def control(connIn, connOut, addr):
                     connOut.write('y'.encode('utf-8'))
                     controllist[1] = 1
                     pass
+                connOut.flush()
         except: 
             print("Could not send command into arduino!!!")
         # connIn = server ; connOut = arduino - doesn't have addr; it is serial 
