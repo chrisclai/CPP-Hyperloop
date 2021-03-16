@@ -5,33 +5,32 @@
 // [Function] Checks to see if serial data has been recieved from the Raspberry Pi
 void RPiSerial()
 {
-  if (Serial.available())
+  if (Serial.available() > 0)
   {
-    String command = Serial.readString();
+    char command = Serial.read();
     // Currently, if string recieved == "brakeon", turn LED on, vice versa for off
-    if (command == "brakeon")
+    if (command == 'a')
     {
       digitalWrite(brakeLED1, HIGH);
       digitalWrite(brakeLED2, HIGH);
       //return "brakeon";
     }
-    else if (command == "brakeoff")
+    else if (command == 'b')
     {
       digitalWrite(brakeLED1, LOW);
       digitalWrite(brakeLED2, LOW);
-      //return "brakeon";
+      //return "brakeoff";
     }
-    else if (command == "motoron")
+    else if (command == 'y')
     {
       digitalWrite(DCMotor, HIGH);
       //return "motoron";
     }
-    else if (command == "motoroff")
+    else if (command == 'z')
     {
       digitalWrite(DCMotor, LOW);
       //return "motoroff";
     }
-    //return "nothing";
   }
 }
 
