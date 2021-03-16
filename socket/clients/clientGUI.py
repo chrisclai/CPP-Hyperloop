@@ -3,6 +3,7 @@ import socket
 import tkinter as tk
 from PIL import Image, ImageTk
 import random
+from ping3 import ping
 
 if len(sys.argv) != 2:
         print("Usage: python3 clientThread.py <hostID>")
@@ -150,6 +151,10 @@ def updateRandValues():
     # Speed Laser 
     SpeedLaser.value['text'] = nums[???]
     """
+    try:
+        pod_com_value['text'] = "Server Ping: " + str(round(ping('45.79.89.135', unit = 'ms'), 2)) + "ms"
+    except:
+        print("ping reading failed. trying again...")
 
     # Output
     global brake_status
