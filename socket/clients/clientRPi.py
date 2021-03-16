@@ -29,18 +29,20 @@ def control(connIn, connOut, addr):
             if not msg:
                 pass
             else:
-                connOut.write(msg.encode('utf-8'))
-                print("test to see how long it takes to run. if this runs immediately, write is not blocking")
                 if msg == "brakeoff":
+                    connOut.write('b'.encode('utf-8'))
                     controllist[0] = 0
                     pass
                 elif msg == "brakeon":
+                    connOut.write('a'.encode('utf-8'))
                     controllist[0] = 1
                     pass
                 elif msg == "motoroff":
+                    connOut.write('z'.encode('utf-8'))
                     controllist[1] = 0
                     pass
                 elif msg == "motoron":
+                    connOut.write('y'.encode('utf-8'))
                     controllist[1] = 1
                     pass
         except: 
