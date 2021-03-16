@@ -29,6 +29,7 @@ def control(connIn, connOut, addr):
                 pass
             else:
                 connOut.write(msg.encode('utf-8'))
+                print("test to see how long it takes to run. if this runs immediately, write is not blocking")
                 if msg == "brakeoff":
                     controllist[0] = 0
                     pass
@@ -70,7 +71,10 @@ def maindata(connIn, connOut, addr):
         except:
             print("Control list segment at fault. Trying again...")
         for x in range(0, DATA_AMOUNT):
-            mainlist[x] = data[x]
+            try:
+                mainlist[x] = data[x]
+            except:
+                print("Data structure not found. Trying again...")
         
 def tempdata(connIn, connOut, addr): 
     print(f"[TEMP] {addr} Successfully connected to tempdata thread!")
