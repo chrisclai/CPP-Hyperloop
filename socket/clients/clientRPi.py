@@ -6,7 +6,9 @@ import socket
 from _thread import *
 import threading
 
-DATA_AMOUNT = 36
+from ping3 import ping
+
+DATA_AMOUNT = 37
 
 global templist
 templist = [0, 0, 0, 0, 0]
@@ -18,6 +20,14 @@ global mainlist
 mainlist = []
 for i in range(0, DATA_AMOUNT):
     mainlist.append(i)
+
+def ping(addr)
+{
+    print(f"[PING] {addr} Successfully connected to ping thread!")
+    global mainlist
+    while True:
+        mainlist[36] = round(ping('45.79.89.135', 2))
+}
 
 def control(connIn, connOut, addr): 
     print(f"[CONTROL] {addr} Successfully connected to control thread!")
@@ -132,6 +142,10 @@ def Main():
     # [THREAD] Thread to send data to GUI (prevents arduino from getting stuck)
     thread_data = threading.Thread(target = senddata, args=(s, serverIP))
     thread_data.start()
+
+    # [THREAD] Thread to calculate ping
+    thread_ping = threading.Thread(target = senddata, args=(serverIP))
+    thread_ping.start()
     
 if __name__ == '__main__': 
     Main() 
