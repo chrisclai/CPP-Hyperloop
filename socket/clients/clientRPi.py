@@ -15,8 +15,9 @@ global controllist
 controllist = [0, 0]
 
 global mainlist
+mainlist = []
 for i in range(0, DATA_AMOUNT):
-    mainlist[i] = 0
+    mainlist.append(i)
 
 def control(connIn, connOut, addr): 
     print(f"[CONTROL] {addr} Successfully connected to control thread!")
@@ -48,6 +49,7 @@ def maindata(connIn, connOut, addr):
     global templist
     global controllist
     global mainlist
+    time.sleep(1)
     while True:
         # how rasp pi receiving data from arduino \\ ser.writeline()
         try:
@@ -80,13 +82,15 @@ def tempdata(connIn, connOut, addr):
 def senddata(connOut, addr): 
     print(f"[DATA] {addr} Successfully connected to main data stream thread!")
     global mainlist
+    time.sleep(5)
     while True:
         # create string again with all of the list elements and send them out to the GUI
         dataSend = ""
         for x in mainlist:
             dataSend += str(x)  + " "
-            print(dataSend)
-            connOut.send(bytes(dataSend, 'utf-8'))
+        print(dataSend)
+        connOut.send(bytes(dataSend, 'utf-8'))
+        time.sleep(0.1)
 
 def Main():
     if len(sys.argv) != 2:
