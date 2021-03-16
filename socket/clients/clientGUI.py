@@ -40,15 +40,12 @@ global motor_status
 brake_status = False
 motor_status = False
 
-# normal unit array = replace with error 
-
 # INITIALIZATION
 # Creation of the program(root) and its workspace(main_canv).
 root = tk.Tk()
 root.resizable(False, False)
 main_canv = tk.Canvas(root, height=HEIGHT, width=WIDTH, bg='black',highlightthickness=0)
 main_canv.pack()
-
 
 # IMAGE / ICON FILE PATHS
 # Hyperloop Logo courtesy of Cal Poly Pomona Hyperloop Club.
@@ -62,7 +59,6 @@ time_icon = tk.PhotoImage(file='images\\icons\\time.png')
 motor_icon = tk.PhotoImage(file='images\\icons\\motor.png')
 progress_icon = ImageTk.PhotoImage(file='images\\icons\\progress.png')
 calib_icon = tk.PhotoImage(file='images\\icons\\calib.png')
-
 hyperloop_background = tk.PhotoImage(file='images\\background\\2020_2021_background.png')
 
 # HYPERLOOP LOGO
@@ -108,75 +104,84 @@ def updateRandValues():
     nums = message.decode('utf-8').split()
     # print(nums)
 
-    motorControllerTemp1.value['text'] = nums[0]
-    motorControllerTemp2.value['text'] = nums[1]
-    motorTemp1.value['text'] = nums[2]
-    motorTemp2.value['text'] = nums[3]
-    batterySystemTemp.value['text'] = nums[4]
+    # Sensors
+    TempSensorMotorController1.value['text'] = nums[0]
+    TempSensorMotorController2.value['text'] = nums[1]
+    TempSensorMentor1.value['text'] = nums[2]
+    TempSensorMentor2.value['text'] = nums[3]
+    TempSensorBatterySystem.value['text'] = nums[4]
     
     # IMU Readings
-    calib_system.value['text'] = nums[5]
-    calib_gyrometer.value['text'] = nums[6]
-    calib_accelerometer.value['text'] = nums[7]
-    calib_magnometer.value['text'] = nums[8]
-
-    x_absOrientation.value['text'] = float(nums[9])
-    y_absOrientation.value['text'] = float(nums[10])
-    z_absOrientation.value['text'] = float(nums[11])
+    IMU_System.value['text'] = nums[5]
+    IMU_Gyrometer.value['text'] = nums[6]
+    IMU_Accelerometer.value['text'] = nums[7]
+    IMU_Magnometer.value['text'] = nums[8]
+    IMU_Orientation_X.value['text'] = float(nums[9])
+    IMU_Orientation_Y.value['text'] = float(nums[10])
+    IMU_Orientation_Z.value['text'] = float(nums[11])
     """
-    x_angVelocity.value['text'] = float(nums[12])
-    y_angVelocity.value['text'] = float(nums[13])
-    z_angVelocity.value['text'] = float(nums[14])
-    x_acceleration.value['text'] = float(nums[24])
-    y_acceleration.value['text'] = float(nums[25])
-    z_acceleration.value['text'] = float(nums[26])
-    x_linearAcceleration.value['text'] = float(nums[18])
-    y_linearAcceleration.value['text'] = float(nums[19])
-    z_linearAcceleration.value['text'] = float(nums[20])
-    x_gravity.value['text'] = float(nums[21])
-    y_gravity.value['text'] = float(nums[22])
-    z_gravity.value['text'] = float(nums[23])
-    ambient_temp.value['text'] = float(nums[27])
-    """
+    IMU_Gyro_X.value['text'] = float(nums[12])
+    IMU_Gyro_Y.value['text'] = float(nums[13])
+    IMU_Gyro_Z.value['text'] = float(nums[14])
+    IMU_LinearAcc_X.value['text'] = float(nums[24])
+    IMU_LinearAcc_Y.value['text'] = float(nums[25])
+    IMU_LinearAcc_Z.value['text'] = float(nums[26])
+    IMU_Magnetic_X.value['text'] = float(nums[18])
+    IMU_Magnetic_Y.value['text'] = float(nums[19])
+    IMU_Magnetic_Z.value['text'] = float(nums[20])
+    IMU_GravityAcc_Z.value['text'] = float(nums[21])
+    IMU_GravityAcc_Y.value['text'] = float(nums[22])
+    IMU_GravityAcc_Z.value['text'] = float(nums[23])
+    IMU_AccelerometerAcc_Z.value['text'] = float(nums[24])
+    IMU_AccelerometerAcc_Z.value['text'] = float(nums[25])
+    IMU_AccelerometerAcc_Z.value['text'] = float(nums[26])
+    IMU_BoardTemperature.value['text'] = float(nums[27])
+    
     # Pressure Sensor 
     kPa_Pressure.value['text'] = nums[28]
-
+    
     # Current + Voltage Sensor
-    motorVoltage.value['text'] = nums[29]
-    motorCurrent.value['text'] = nums[30]
-    batteryVoltage.value['text'] = nums[31]
-    batteryCurrent.value['text'] = nums[32]
-    batteryCapacity.value['text'] = nums[33]
+    Motor_Voltage.value['text'] = nums[29]
+    Motor_Current.value['text'] = nums[30]
+    Battery_Current.value['text'] = nums[31]
+    Battery_Current.value['text'] = nums[32]
+    Battery_Capacity.value['text'] = nums[33]
+    
+    # Speed Laser 
+    SpeedLaser.value['text'] = nums[???]
+    """
 
-    # 
-    brakeButton.command = int(nums[34]) # status of brakes
-    motorButton.command = int(nums[35]) # status of motors
-
+    # Output
+    global brake_status
+    global motor_status
+    brake_status = nums[34]
+    if brake_status == '1':
+        brakeStatus['text'] = "BRAKE ON"
+    else:
+        brakeStatus['text'] = "BRAKE OFF"
+    motor_status = nums[35]
+    if motor_status == '1':
+        motorStatus['text'] = "MOTOR ON"
+    else:
+        motorStatus['text'] = "MOTOR OFF"
+    
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
 
-# totally useful function.
+# actually useful function now
 def brakeToggle():
     global brake_status
-    if not brake_status: # if the brake is currently off
+    if brake_status == '0': # if the brake is currently off
         s.send(bytes('brakeon', 'utf-8'))
-        brake_status = True
-        print('brakeon')
     else: # if the brake is currently on
         s.send(bytes('brakeoff', 'utf-8'))
-        brake_status = False
-        print('brakeoff')
 
 def motorToggle():
     global motor_status
-    if not motor_status: # if the motor is currently off
+    if motor_status == '0': # if the motor is currently off
         s.send(bytes('motoron', 'utf-8'))
-        motor_status = True
-        print('motoron')
     else: # if the brake is currently on
         s.send(bytes('motoroff', 'utf-8'))
-        motor_status = False
-        print('motoroff')
 
 # TIME
 # Creates workspace for all time elements.
@@ -228,12 +233,12 @@ motor_canv.place(x=COL2, y=35, anchor='nw')
 
 motorTitle = tkTitle(master=motor_canv, iconpos=0.5, icon=motor_icon)
 
-motorControllerTemp1 = tkLabelUnit(master=motor_canv, str='Motor Controller 1 Temp: ', val='Error', unit='°C', list=0)
-motorControllerTemp2 = tkLabelUnit(master=motor_canv, str='Motor Controller 2 Temp:', val='Error', unit='°C', list=1)
-motorTemp1 = tkLabelUnit(master=motor_canv, str='Motor 1 Temp:', val='Error', unit='°C', list=2)
-motorTemp2 = tkLabelUnit(master=motor_canv, str='Motor 2 Temp:', val='Error', unit='°C', list=3)
-motorVoltage = tkLabelUnit(master=motor_canv, str='Motor Voltage IN:', val='Error', unit='V', list=4)
-motorCurrent = tkLabelUnit(master=motor_canv, str='Motor Current:', val='Error', unit='A', list=5)
+TempSensorMotorController1 = tkLabelUnit(master=motor_canv, str='Motor Controller 1 Temp: ', val='Error', unit='°C', list=0)
+TempSensorMotorController2 = tkLabelUnit(master=motor_canv, str='Motor Controller 2 Temp:', val='Error', unit='°C', list=1)
+TempSensorMentor1 = tkLabelUnit(master=motor_canv, str='Motor 1 Temp:', val='Error', unit='°C', list=2)
+TempSensorMentor2 = tkLabelUnit(master=motor_canv, str='Motor 2 Temp:', val='Error', unit='°C', list=3)
+Motor_Voltage = tkLabelUnit(master=motor_canv, str='Motor Voltage IN:', val='Error', unit='V', list=4)
+Motor_Current = tkLabelUnit(master=motor_canv, str='Motor Current:', val='Error', unit='A', list=5)
 
 # POD
 # Creates workspace for physical elements of the pod.
@@ -271,10 +276,10 @@ bat_canv.place(x=COL3, y=POD_HEIGHT+35, anchor='nw')
 
 batteryTitle = tkTitle(master=bat_canv, iconpos=0.5, icon=battery_icon)
 
-batterySystemTemp = tkLabelUnit(master=bat_canv, str='Battery System Temp:', val='Error', unit='°C', list=0)
-batteryVoltage = tkLabelUnit(master=bat_canv, str='Battery Voltage:', val='Error', unit='V', list=1)
-batteryCurrent = tkLabelUnit(master=bat_canv, str='Battery Current:', val='Error', unit='mA', list=2)
-batteryCapacity = tkLabelUnit(master=bat_canv, str='Battery Capacity:', val='Error', unit='%', list=3)
+TempSensorBatterySystem = tkLabelUnit(master=bat_canv, str='Battery System Temp:', val='Error', unit='°C', list=0)
+Battery_Current = tkLabelUnit(master=bat_canv, str='Battery Voltage:', val='Error', unit='V', list=1)
+Battery_Current = tkLabelUnit(master=bat_canv, str='Battery Current:', val='Error', unit='mA', list=2)
+Battery_Capacity = tkLabelUnit(master=bat_canv, str='Battery Capacity:', val='Error', unit='%', list=3)
 
 # POD PROGRESS
 # Creates workspace for the progress bar of the pod.
@@ -315,19 +320,18 @@ CONTROL_WIDTH = 450
 control_canv = tk.Canvas(main_canv, width=CONTROL_WIDTH, height=CONTROL_HEIGHT, highlightthickness=0, bg='black')   
 control_canv.place(x=COL2-40, y=TIME_HEIGHT+COM_HEIGHT+50, anchor='nw')
 
-
 brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',18,'bold'), command=brakeToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
 brakeButton.place(relx=0.25,rely=0.40,anchor='center')
 brakeLabel = tk.Label(control_canv, text='Brake Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
 brakeLabel.place(relx=0.25,rely=0.65, anchor='center')
-brakeStatus = tk.Label(control_canv, textvariable='DISENGAGED', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
+brakeStatus = tk.Label(control_canv, text='BRAKE OFF', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
 brakeStatus.place(relx=0.25,rely=0.8, anchor='center')
 
 motorButton = tk.Button(control_canv, text="POWER", font=('garamond',18,'bold'), command=motorToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
 motorButton.place(relx=0.75,rely=0.40,anchor='center')
 motorLabel = tk.Label(control_canv, text='Motor Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
 motorLabel.place(relx=0.75,rely=0.65, anchor='center')
-motorStatus = tk.Label(control_canv, text='MOTOR ON', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
+motorStatus = tk.Label(control_canv, text='MOTOR OFF', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
 motorStatus.place(relx=0.75,rely=0.8, anchor='center')
 
 # CALIBRATION 
@@ -340,34 +344,13 @@ calib_canv.place(x=COL3 , y=POD_HEIGHT+BAT_HEIGHT+35 , anchor='nw')
 
 calibTitle = tkTitle(master=calib_canv, iconpos= 0.5, icon=calib_icon) # NEED TO IMPLEMENT CALIB ICON
 
-x_absOrientation = tkLabelUnit(master=calib_canv, str='X Orientation: ', val='Error', unit='°', list=0)
-y_absOrientation = tkLabelUnit(master=calib_canv, str='Y Orientation: ', val='Error', unit='°', list=1)
-z_absOrientation = tkLabelUnit(master=calib_canv, str='Z Orientation: ', val='Error', unit='°', list=2)
-calib_system = tkLabelUnit(master=calib_canv, str='System: ', val='Error', unit='', list=3)
-calib_gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer: ', val='Error', unit='', list=4)
-calib_accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer: ', val='Error', unit='', list=5)
-calib_magnometer = tkLabelUnit(master=calib_canv, str='Magnometer: ', val='Error', unit='', list=6)
-
-"""
-# Calibration
-# Creates workspace for all calib elements.
-CALIB_HEIGHT=280
-CALIB_WIDTH=400
-calib_canv = tk.Canvas(main_canv, width=CALIB_WIDTH, height=CALIB_HEIGHT, highlightthickness=0, bg='black') 
-calib_canv.place(x=COL3, y=POD_HEIGHT+BAT_HEIGHT+35, anchor='nw')
-
-calibTitle = tkTitle(master=calib_canv, iconpos=0.5, icon=calib_icon)
-
-calibSystem_Label = tkLabelUnit(master=calib_canv, str='System: ', val="error", unit=' ', list=0)
-calibGyro_Label = tkLabelUnit(master=calib_canv, str='Gyro: ', val="error", unit=' ', list=1)
-
-calibAccel_Label = tkLabelUnit(master=calib_canv, str='Accel: ', val="error", unit=' ', list=2)
-calibMagno_Label = tkLabelUnit(master=calib_canv, str='Magno:', val="error", unit=' ', list=3)
-
-calibX_Label = tkLabelUnit(master=calib_canv, str='x: ', val="error", unit=' ', list=4)
-calibY_Label = tkLabelUnit(master=calib_canv, str='y: ', val="error", unit=' ', list=5)
-calibZ_Label = tkLabelUnit(master=calib_canv, str='z: ', val="error", unit=' ', list=6)
-"""
+IMU_Orientation_X = tkLabelUnit(master=calib_canv, str='X Orientation: ', val='Error', unit='°', list=0)
+IMU_Orientation_Y = tkLabelUnit(master=calib_canv, str='Y Orientation: ', val='Error', unit='°', list=1)
+IMU_Orientation_Z = tkLabelUnit(master=calib_canv, str='Z Orientation: ', val='Error', unit='°', list=2)
+IMU_System = tkLabelUnit(master=calib_canv, str='System: ', val='Error', unit='', list=3)
+IMU_Gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer: ', val='Error', unit='', list=4)
+IMU_Accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer: ', val='Error', unit='', list=5)
+IMU_Magnometer = tkLabelUnit(master=calib_canv, str='Magnometer: ', val='Error', unit='', list=6)
 
 # UPDATE / REFRESH
 # This is start calling the update function which is recursive.

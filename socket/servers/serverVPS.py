@@ -25,7 +25,9 @@ def read_write_sync(connIn, connOut, addr):
     print(f"[NEW CONNECTION] {addr} connected to r-w-s thread.")
     while True:
         try:
-            connOut.send(connIn.recv(4096)) # server will receive bytes from raspberry pi and send to gui
+            msg = connIn.recv(4096)
+            # print(msg.decode('utf-8')) # test if data comes through
+            connOut.send(msg) # server will receive bytes from raspberry pi and send to gui
         except:
             print(f"Packet send attempt to {addr} failed. Closing connection.")
             connOut.close()
@@ -69,11 +71,15 @@ def Main():
         time.sleep(3)
 
         while True:
-            if not rpiclientsocket.recv(4096):
+            msg = rpiclientsocket.recv(4096)
+            if not msg:
                 rpiclientsocket.close()
                 print("RPi disconnected. Closing socket.")
                 print("Unable to continue process. Terminating script.")
                 break
+            else:
+                # print(msg.decode('utf-8')) # test to see if data comes through
+                pass
             try:
                 conn, addr = s.accept()       
                 print(f"Connection from {addr} has been established!")
