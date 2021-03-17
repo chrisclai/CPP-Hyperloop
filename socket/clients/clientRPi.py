@@ -6,7 +6,9 @@ import socket
 from _thread import *
 import threading
 
-DATA_AMOUNT = 36
+from ping3 import ping
+
+DATA_AMOUNT = 37
 
 global templist
 templist = [0, 0, 0, 0, 0]
@@ -15,8 +17,17 @@ global controllist
 controllist = [0, 0]
 
 global mainlist
+mainlist = []
 for i in range(0, DATA_AMOUNT):
-    mainlist[i] = 0
+    mainlist.append(i)
+
+def ping(addr)
+{
+    print(f"[PING] {addr} Successfully connected to ping thread!")
+    global mainlist
+    while True:
+        mainlist[36] = round(ping('45.79.89.135', 2))
+}
 
 def control(connIn, connOut, addr): 
     print(f"[CONTROL] {addr} Successfully connected to control thread!")
@@ -28,19 +39,23 @@ def control(connIn, connOut, addr):
             if not msg:
                 pass
             else:
-                connOut.write(msg.encode('utf-8'))
                 if msg == "brakeoff":
+                    connOut.write('b'.encode('utf-8'))
                     controllist[0] = 0
                     pass
                 elif msg == "brakeon":
+                    connOut.write('a'.encode('utf-8'))
                     controllist[0] = 1
                     pass
                 elif msg == "motoroff":
+                    connOut.write('z'.encode('utf-8'))
                     controllist[1] = 0
                     pass
                 elif msg == "motoron":
+                    connOut.write('y'.encode('utf-8'))
                     controllist[1] = 1
                     pass
+                connOut.flush()
         except: 
             print("Could not send command into arduino!!!")
         # connIn = server ; connOut = arduino - doesn't have addr; it is serial 
@@ -51,6 +66,7 @@ def maindata(connIn, connOut, addr):
     global templist
     global controllist
     global mainlist
+    time.sleep(1)
     while True:
         # how rasp pi receiving data from arduino \\ ser.writeline()
         try:
@@ -70,7 +86,10 @@ def maindata(connIn, connOut, addr):
         except:
             print("Control list segment at fault. Trying again...")
         for x in range(0, DATA_AMOUNT):
-            mainlist[x] = data[x]
+            try:
+                mainlist[x] = data[x]
+            except:
+                print("Data structure not found. Trying again...")
         
 def tempdata(connIn, connOut, addr): 
     print(f"[TEMP] {addr} Successfully connected to tempdata thread!")
@@ -83,13 +102,15 @@ def tempdata(connIn, connOut, addr):
 def senddata(connOut, addr): 
     print(f"[DATA] {addr} Successfully connected to main data stream thread!")
     global mainlist
+    time.sleep(5)
     while True:
         # create string again with all of the list elements and send them out to the GUI
         dataSend = ""
         for x in mainlist:
             dataSend += str(x)  + " "
-            print(dataSend)
-            connOut.send(bytes(dataSend, 'utf-8'))
+        print(dataSend)
+        connOut.send(bytes(dataSend, 'utf-8'))
+        time.sleep(0.1)
 
 def Main():
     if len(sys.argv) != 2:
@@ -122,6 +143,10 @@ def Main():
     # [THREAD] Thread to send data to GUI (prevents arduino from getting stuck)
     thread_data = threading.Thread(target = senddata, args=(s, serverIP))
     thread_data.start()
+
+    # [THREAD] Thread to calculate ping
+    thread_ping = threading.Thread(target = senddata, args=(serverIP))
+    thread_ping.start()
     
 if __name__ == '__main__': 
     Main() 
