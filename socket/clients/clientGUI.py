@@ -1,8 +1,10 @@
 import sys
 import socket
 import tkinter as tk
-from PIL import Image, ImageTk
 import random
+import math
+from PIL import Image, ImageTk
+from ping3 import ping, verbose_ping
 from ping3 import ping
 
 if len(sys.argv) != 2:
@@ -26,6 +28,7 @@ LABEL_BEGIN_Y = 70
 COL1 = 0
 COL2 = 410
 COL3 = 820
+COL4 = 600
 
 # IMAGE PIXEL SIZE REFERENCE
 LOGO_HEIGHT=166
@@ -120,23 +123,28 @@ def updateRandValues():
     IMU_Orientation_X.value['text'] = float(nums[9])
     IMU_Orientation_Y.value['text'] = float(nums[10])
     IMU_Orientation_Z.value['text'] = float(nums[11])
-    """
     IMU_Gyro_X.value['text'] = float(nums[12])
     IMU_Gyro_Y.value['text'] = float(nums[13])
     IMU_Gyro_Z.value['text'] = float(nums[14])
+    """
     IMU_LinearAcc_X.value['text'] = float(nums[24])
     IMU_LinearAcc_Y.value['text'] = float(nums[25])
     IMU_LinearAcc_Z.value['text'] = float(nums[26])
-    IMU_Magnetic_X.value['text'] = float(nums[18])
+    IMU_Magnetic_X.value['text'] = float(nums[18]) # Find magnitude ONLY
     IMU_Magnetic_Y.value['text'] = float(nums[19])
     IMU_Magnetic_Z.value['text'] = float(nums[20])
     IMU_GravityAcc_Z.value['text'] = float(nums[21])
     IMU_GravityAcc_Y.value['text'] = float(nums[22])
     IMU_GravityAcc_Z.value['text'] = float(nums[23])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[24])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[25])
+    """
+    IMU_AccelerometerAcc_X.value['text'] = float(nums[24]) # Find magnitude + input components
+    IMU_AccelerometerAcc_Y.value['text'] = float(nums[25])
     IMU_AccelerometerAcc_Z.value['text'] = float(nums[26])
     IMU_BoardTemperature.value['text'] = float(nums[27])
+
+    # IMU Magnitude 
+    IMU_Magnetic_Magnitude.value['text'] = round(math.sqrt((float(nums[18]) ** 2) + (float(nums[19]) ** 2) + (float(nums[20]) ** 2)), 3)
+    IMU_AccelerometerAcc_Magnitude.value['text'] = round(math.sqrt((float(nums[24]) ** 2) + (float(nums[25]) ** 2) + (float(nums[26]) ** 2)), 3)
     
     # Pressure Sensor 
     kPa_Pressure.value['text'] = nums[28]
@@ -144,19 +152,23 @@ def updateRandValues():
     # Current + Voltage Sensor
     Motor_Voltage.value['text'] = nums[29]
     Motor_Current.value['text'] = nums[30]
-    Battery_Current.value['text'] = nums[31]
+    Battery_Voltage.value['text'] = nums[31]
     Battery_Current.value['text'] = nums[32]
     Battery_Capacity.value['text'] = nums[33]
     
     # Speed Laser 
-    SpeedLaser.value['text'] = nums[???]
-    """
+    # SpeedLaser.value['text'] = nums[???]
+    
+    # Ping 
     try:
         pod_com_value['text'] = "Server Ping: " + str(round(ping('45.79.89.135', unit = 'ms'), 2)) + "ms"
     except:
         print("ping reading failed. trying again...")
+    # Ping_RPI_Server.value['text'] = nums[36]
+    # Ping_GUI_Server.value['text'] = ping('45.79.89.135', unit='ms') 
+    # print (ping('45.79.89.135')) 
 
-    # Output
+    # Brake + Motor Output
     global brake_status
     global motor_status
     brake_status = nums[34]
@@ -173,7 +185,6 @@ def updateRandValues():
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
 
-# actually useful function now
 def brakeToggle():
     global brake_status
     if brake_status == '0': # if the brake is currently off
@@ -187,6 +198,17 @@ def motorToggle():
         s.send(bytes('motoron', 'utf-8'))
     else: # if the brake is currently on
         s.send(bytes('motoroff', 'utf-8'))
+
+# PING
+PING_HEIGHT = 50
+PING_WIDTH = 50
+ping_canv = tk.Canvas(main_canv, width=PING_WIDTH, height=PING_HEIGHT, highlightthickness=0, bg="black")
+ping_canv.place(x=COL4, y=35, anchor='nw')
+
+# Ping_RPI_Server = tkLabelUnit(master=ping_canv,str='Ping: ',val="Error",unit="ms",list=0)
+Ping_GUI_Server_label = tk.Label(ping_canv, text='GUI -> SERVER:', bg='black', fg='white', font=('garamond',11,),justify='right')
+Ping_GUI_Server = tkLabelUnit(master=ping_canv,str='Ping: ',val="Error",unit="ms",list=0)
+
 
 # TIME
 # Creates workspace for all time elements.
@@ -260,16 +282,23 @@ kPa_Pressure = tkLabelUnit(master=pod_canv, str='Pressure:', val='Error', unit='
 # KINEMATICS
 # Creates workspace for all motion related elements.
 # Set bg to 'blue' in kin_canv to see the extent of the workspace.
-KIN_HEIGHT=200
+KIN_HEIGHT=350
 KIN_WIDTH=400
 kin_canv = tk.Canvas(main_canv, width=KIN_WIDTH, height=KIN_HEIGHT, highlightthickness=0, bg='black')   
-kin_canv.place(x=COL1, y=COM_HEIGHT+TIME_HEIGHT+30, anchor='nw')
+kin_canv.place(x=COL1, y=COM_HEIGHT+TIME_HEIGHT-40, anchor='nw')
 
-# change later pls
 kinematicTitle = tkTitle(master=kin_canv, iconpos=0.5, icon=kin_icon)
-distance_Label = tkLabelUnit(master=kin_canv, str='Distance Traveled:', val="0", unit='km', list=0)
-velocity_Label = tkLabelUnit(master=kin_canv, str='Pod Speed:', val="0", unit='km/h', list=1)
-acceleration_Label = tkLabelUnit(master=kin_canv, str='Acceleration:', val="0", unit='km/h²', list=2)
+
+IMU_Gyro_X = tkLabelUnit(master=kin_canv, str='Gyroscope X:', val="Error", unit='rad/s', list=0)
+IMU_Gyro_Y = tkLabelUnit(master=kin_canv, str='Gyroscope Y:', val="Error", unit='rad/s', list=1)
+IMU_Gyro_Z = tkLabelUnit(master=kin_canv, str='Gyroscope Z:', val="Error", unit='rad/s', list=2)
+
+IMU_AccelerometerAcc_X = tkLabelUnit(master=kin_canv, str='Accelerometer Acc. X:', val="Error", unit='m/s^2', list=3)
+IMU_AccelerometerAcc_Y = tkLabelUnit(master=kin_canv, str='Accelerometer Acc. Y:', val="Error", unit='m/s^2', list=4)
+IMU_AccelerometerAcc_Z = tkLabelUnit(master=kin_canv, str='Accelerometer Acc. Z:', val="Error", unit='m/s^2', list=5)
+
+IMU_Magnetic_Magnitude = tkLabelUnit(master=kin_canv, str='Magnetic Magnitude: ', val="Error", unit='uT', list=6)
+IMU_AccelerometerAcc_Magnitude = tkLabelUnit(master=kin_canv, str='Acceleration Magnitude: ', val="Error", unit='m/s^2', list=7)
 
 # BATTERY
 # Creates workspace for elements relating to battery management.
@@ -282,7 +311,7 @@ bat_canv.place(x=COL3, y=POD_HEIGHT+35, anchor='nw')
 batteryTitle = tkTitle(master=bat_canv, iconpos=0.5, icon=battery_icon)
 
 TempSensorBatterySystem = tkLabelUnit(master=bat_canv, str='Battery System Temp:', val='Error', unit='°C', list=0)
-Battery_Current = tkLabelUnit(master=bat_canv, str='Battery Voltage:', val='Error', unit='V', list=1)
+Battery_Voltage = tkLabelUnit(master=bat_canv, str='Battery Voltage:', val='Error', unit='V', list=1)
 Battery_Current = tkLabelUnit(master=bat_canv, str='Battery Current:', val='Error', unit='mA', list=2)
 Battery_Capacity = tkLabelUnit(master=bat_canv, str='Battery Capacity:', val='Error', unit='%', list=3)
 
@@ -356,6 +385,7 @@ IMU_System = tkLabelUnit(master=calib_canv, str='System: ', val='Error', unit=''
 IMU_Gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer: ', val='Error', unit='', list=4)
 IMU_Accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer: ', val='Error', unit='', list=5)
 IMU_Magnometer = tkLabelUnit(master=calib_canv, str='Magnometer: ', val='Error', unit='', list=6)
+IMU_BoardTemperature = tkLabelUnit(master=calib_canv, str='Board Temperature: ', val='Error', unit='°C', list=7)
 
 # UPDATE / REFRESH
 # This is start calling the update function which is recursive.
