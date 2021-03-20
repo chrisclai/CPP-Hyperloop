@@ -3,9 +3,12 @@ import socket
 import tkinter as tk
 import random
 import math
+import time
 from PIL import Image, ImageTk
 from ping3 import ping, verbose_ping
 from ping3 import ping
+from _thread import *
+import threading  
 
 if len(sys.argv) != 2:
         print("Usage: python3 clientThread.py <hostID>")
@@ -43,6 +46,8 @@ global brake_status
 global motor_status
 brake_status = False
 motor_status = False
+global start_control
+start_control = False
 
 # INITIALIZATION
 # Creation of the program(root) and its workspace(main_canv).
@@ -103,7 +108,7 @@ class tkLabelUnit:
 # UPDATE FUNCTION
 # Will assign random numbers to values whenever called.
 def updateRandValues():
-
+    
     message = s.recv(4096)
     nums = message.decode('utf-8').split()
     # print(nums)
@@ -181,7 +186,7 @@ def updateRandValues():
         motorStatus['text'] = "MOTOR ON"
     else:
         motorStatus['text'] = "MOTOR OFF"
-    
+
     # Recursive function to update values.
     root.after(REFRESH_RATE, updateRandValues)
 
@@ -199,16 +204,26 @@ def motorToggle():
     else: # if the brake is currently on
         s.send(bytes('motoroff', 'utf-8'))
 
-# PING
-PING_HEIGHT = 50
-PING_WIDTH = 50
-ping_canv = tk.Canvas(main_canv, width=PING_WIDTH, height=PING_HEIGHT, highlightthickness=0, bg="black")
-ping_canv.place(x=COL4, y=35, anchor='nw')
+def start():
+    # when clicked, creates a thread and runs function inside that thread 
+    # once thread created, has 30 sec timer and then closes thread 
+    global start_control
+    if not start_control: 
+        thread = threading.Thread(target = logs)
+        thread.start()
+        print ("Log has BEGUN WOOP WOOP")
+        start_control = True
+    else:
+        print ("Button is already running!")
 
-# Ping_RPI_Server = tkLabelUnit(master=ping_canv,str='Ping: ',val="Error",unit="ms",list=0)
-Ping_GUI_Server_label = tk.Label(ping_canv, text='GUI -> SERVER:', bg='black', fg='white', font=('garamond',11,),justify='right')
-Ping_GUI_Server = tkLabelUnit(master=ping_canv,str='Ping: ',val="Error",unit="ms",list=0)
+def logs():
+    global start_control
+    time.sleep(30)
+    start_control = False
 
+def stop():
+    s.send(bytes('brakeoff', 'utf-8'))
+    s.send(bytes('motoroff', 'utf-8'))
 
 # TIME
 # Creates workspace for all time elements.
@@ -354,19 +369,33 @@ CONTROL_WIDTH = 450
 control_canv = tk.Canvas(main_canv, width=CONTROL_WIDTH, height=CONTROL_HEIGHT, highlightthickness=0, bg='black')   
 control_canv.place(x=COL2-40, y=TIME_HEIGHT+COM_HEIGHT+50, anchor='nw')
 
-brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',18,'bold'), command=brakeToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
-brakeButton.place(relx=0.25,rely=0.40,anchor='center')
+brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',14,'bold'), command=brakeToggle, justify='center', padx=5, pady=5, bg='black', fg='red')
+brakeButton.place(relx=0.17,rely=0.20,anchor='center')
 brakeLabel = tk.Label(control_canv, text='Brake Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
-brakeLabel.place(relx=0.25,rely=0.65, anchor='center')
+brakeLabel.place(relx=0.40,rely=0.20, anchor='center')
 brakeStatus = tk.Label(control_canv, text='BRAKE OFF', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
-brakeStatus.place(relx=0.25,rely=0.8, anchor='center')
+brakeStatus.place(relx=0.40,rely=0.30, anchor='center')
 
-motorButton = tk.Button(control_canv, text="POWER", font=('garamond',18,'bold'), command=motorToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
-motorButton.place(relx=0.75,rely=0.40,anchor='center')
+motorButton = tk.Button(control_canv, text="POWER", font=('garamond',14,'bold'), command=motorToggle, justify='center', padx=5, pady=5, bg='black', fg='red')
+motorButton.place(relx=0.17,rely=0.60,anchor='center')
 motorLabel = tk.Label(control_canv, text='Motor Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
-motorLabel.place(relx=0.75,rely=0.65, anchor='center')
+motorLabel.place(relx=0.40,rely=0.60, anchor='center')
 motorStatus = tk.Label(control_canv, text='MOTOR OFF', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
-motorStatus.place(relx=0.75,rely=0.8, anchor='center')
+motorStatus.place(relx=0.40,rely=0.70, anchor='center')
+
+startButton = tk.Button(control_canv, text="START", font=('garamond',14,'bold'), command=start, justify='center', padx=10, pady=10, bg='black', fg='red')
+startButton.place(relx=0.65,rely=0.20,anchor='center')
+startLabel = tk.Label(control_canv, text='Start Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
+startLabel.place(relx=0.88,rely=0.20, anchor='center')
+startStatus = tk.Label(control_canv, text='DISENGAGED', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
+startStatus.place(relx=0.88,rely=0.30, anchor='center')
+
+stopButton = tk.Button(control_canv, text="STOP", font=('garamond',14,'bold'), command=stop, justify='center', padx=10, pady=10, bg='black', fg='red')
+stopButton.place(relx=0.65,rely=0.60,anchor='center')
+stopLabel = tk.Label(control_canv, text='Stop Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
+stopLabel.place(relx=0.88,rely=0.60, anchor='center')
+stopStatus = tk.Label(control_canv, text='DISENGAGED', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
+stopStatus.place(relx=0.88,rely=0.70, anchor='center')
 
 # CALIBRATION 
 # Creates workspace for all calibration elements
