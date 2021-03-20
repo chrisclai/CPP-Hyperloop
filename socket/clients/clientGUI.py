@@ -4,6 +4,8 @@ import tkinter as tk
 import random
 import math
 import time
+import datetime
+import json
 from PIL import Image, ImageTk
 from ping3 import ping, verbose_ping
 from ping3 import ping
@@ -48,6 +50,12 @@ brake_status = False
 motor_status = False
 global start_control
 start_control = False
+global toggleData
+toggleData = False
+global datadict
+datadict = {}
+global counter
+counter = 0
 
 # INITIALIZATION
 # Creation of the program(root) and its workspace(main_canv).
@@ -107,11 +115,20 @@ class tkLabelUnit:
 
 # UPDATE FUNCTION
 # Will assign random numbers to values whenever called.
-def updateRandValues():
+def updateData():
+    global toggleData
+    global datadict
+    global counter
     
-    message = s.recv(4096)
-    nums = message.decode('utf-8').split()
-    # print(nums)
+    message = s.recv(4096).decode('utf-8')
+    
+    datastring = message
+    nums = message.split()
+    
+    if toggleData:
+        datadict[str(counter)] = datastring
+        print(datastring)
+        counter += 1
 
     # Sensors
     TempSensorMotorController1.value['text'] = nums[0]
@@ -188,7 +205,7 @@ def updateRandValues():
         motorStatus['text'] = "MOTOR OFF"
 
     # Recursive function to update values.
-    root.after(REFRESH_RATE, updateRandValues)
+    root.after(REFRESH_RATE, updateData)
 
 def brakeToggle():
     global brake_status
@@ -206,7 +223,7 @@ def motorToggle():
 
 def start():
     # when clicked, creates a thread and runs function inside that thread 
-    # once thread created, has 30 sec timer and then closes thread 
+    # once thread created, has 10 sec timer and then closes thread 
     global start_control
     if not start_control: 
         thread = threading.Thread(target = logs)
@@ -218,10 +235,31 @@ def start():
 
 def logs():
     global start_control
-    time.sleep(30)
+    global datastring
+    global toggleData
+    global datadict
+    global counter
+    
+    datadict = {}
+    timeout = time.time() + 10
+    filename = datetime.datetime.now().strftime("%m.%d.%Y_%I.%M.%S%p")
+    counter = 0
+    toggleData = True
+
+    while True:
+        if time.time() > timeout:
+            toggleData = False
+            break
+        time.sleep(0.1)
+
+    with open("logs/" + filename + ".json", 'w') as f:
+        json.dump(datadict, f, indent = 2)
+    print("10 second data recording complete. Please check log folder for file.")
     start_control = False
 
 def stop():
+    global toggleData
+    toggleData = False
     s.send(bytes('brakeoff', 'utf-8'))
     s.send(bytes('motoroff', 'utf-8'))
 
@@ -419,7 +457,7 @@ IMU_BoardTemperature = tkLabelUnit(master=calib_canv, str='Board Temperature: ',
 # UPDATE / REFRESH
 # This is start calling the update function which is recursive.
 # The recursion is essentially the update / represh.
-root.after(REFRESH_RATE, updateRandValues)
+root.after(REFRESH_RATE, updateData)
 
 # END
 root.mainloop()
