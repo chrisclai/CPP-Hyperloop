@@ -235,7 +235,6 @@ def start():
 
 def logs():
     global start_control
-    global datastring
     global toggleData
     global datadict
     global counter
