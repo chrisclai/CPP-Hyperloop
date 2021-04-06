@@ -1,8 +1,16 @@
 import sys
 import socket
 import tkinter as tk
-from PIL import Image, ImageTk
 import random
+import math
+import time
+import datetime
+import json
+from PIL import Image, ImageTk
+from ping3 import ping, verbose_ping
+from ping3 import ping
+from _thread import *
+import threading  
 
 if len(sys.argv) != 2:
         print("Usage: python3 clientThread.py <hostID>")
@@ -25,6 +33,7 @@ LABEL_BEGIN_Y = 70
 COL1 = 0
 COL2 = 410
 COL3 = 820
+COL4 = 600
 
 # IMAGE PIXEL SIZE REFERENCE
 LOGO_HEIGHT=166
@@ -39,6 +48,14 @@ global brake_status
 global motor_status
 brake_status = False
 motor_status = False
+global start_control
+start_control = False
+global toggleData
+toggleData = False
+global datadict
+datadict = {}
+global counter
+counter = 0
 
 # INITIALIZATION
 # Creation of the program(root) and its workspace(main_canv).
@@ -98,11 +115,20 @@ class tkLabelUnit:
 
 # UPDATE FUNCTION
 # Will assign random numbers to values whenever called.
-def updateRandValues():
-
-    message = s.recv(4096)
-    nums = message.decode('utf-8').split()
-    # print(nums)
+def updateData():
+    global toggleData
+    global datadict
+    global counter
+    
+    message = s.recv(4096).decode('utf-8')
+    
+    datastring = message
+    nums = message.split()
+    
+    if toggleData:
+        datadict[str(counter)] = datastring
+        print(datastring)
+        counter += 1
 
     # Sensors
     TempSensorMotorController1.value['text'] = nums[0]
@@ -119,23 +145,28 @@ def updateRandValues():
     IMU_Orientation_X.value['text'] = float(nums[9])
     IMU_Orientation_Y.value['text'] = float(nums[10])
     IMU_Orientation_Z.value['text'] = float(nums[11])
-    """
     IMU_Gyro_X.value['text'] = float(nums[12])
     IMU_Gyro_Y.value['text'] = float(nums[13])
     IMU_Gyro_Z.value['text'] = float(nums[14])
+    """
     IMU_LinearAcc_X.value['text'] = float(nums[24])
     IMU_LinearAcc_Y.value['text'] = float(nums[25])
     IMU_LinearAcc_Z.value['text'] = float(nums[26])
-    IMU_Magnetic_X.value['text'] = float(nums[18])
+    IMU_Magnetic_X.value['text'] = float(nums[18]) # Find magnitude ONLY
     IMU_Magnetic_Y.value['text'] = float(nums[19])
     IMU_Magnetic_Z.value['text'] = float(nums[20])
     IMU_GravityAcc_Z.value['text'] = float(nums[21])
     IMU_GravityAcc_Y.value['text'] = float(nums[22])
     IMU_GravityAcc_Z.value['text'] = float(nums[23])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[24])
-    IMU_AccelerometerAcc_Z.value['text'] = float(nums[25])
+    """
+    IMU_AccelerometerAcc_X.value['text'] = float(nums[24]) # Find magnitude + input components
+    IMU_AccelerometerAcc_Y.value['text'] = float(nums[25])
     IMU_AccelerometerAcc_Z.value['text'] = float(nums[26])
     IMU_BoardTemperature.value['text'] = float(nums[27])
+
+    # IMU Magnitude 
+    IMU_Magnetic_Magnitude.value['text'] = round(math.sqrt((float(nums[18]) ** 2) + (float(nums[19]) ** 2) + (float(nums[20]) ** 2)), 3)
+    IMU_AccelerometerAcc_Magnitude.value['text'] = round(math.sqrt((float(nums[24]) ** 2) + (float(nums[25]) ** 2) + (float(nums[26]) ** 2)), 3)
     
     # Pressure Sensor 
     kPa_Pressure.value['text'] = nums[28]
@@ -143,15 +174,23 @@ def updateRandValues():
     # Current + Voltage Sensor
     Motor_Voltage.value['text'] = nums[29]
     Motor_Current.value['text'] = nums[30]
-    Battery_Current.value['text'] = nums[31]
+    Battery_Voltage.value['text'] = nums[31]
     Battery_Current.value['text'] = nums[32]
     Battery_Capacity.value['text'] = nums[33]
     
     # Speed Laser 
-    SpeedLaser.value['text'] = nums[???]
-    """
+    # SpeedLaser.value['text'] = nums[???]
+    
+    # Ping 
+    try:
+        pod_com_value['text'] = "Server Ping: " + str(round(ping('45.79.89.135', unit = 'ms'), 2)) + "ms"
+    except:
+        print("ping reading failed. trying again...")
+    # Ping_RPI_Server.value['text'] = nums[36]
+    # Ping_GUI_Server.value['text'] = ping('45.79.89.135', unit='ms') 
+    # print (ping('45.79.89.135')) 
 
-    # Output
+    # Brake + Motor Output
     global brake_status
     global motor_status
     brake_status = nums[34]
@@ -164,11 +203,10 @@ def updateRandValues():
         motorStatus['text'] = "MOTOR ON"
     else:
         motorStatus['text'] = "MOTOR OFF"
-    
-    # Recursive function to update values.
-    root.after(REFRESH_RATE, updateRandValues)
 
-# actually useful function now
+    # Recursive function to update values.
+    root.after(REFRESH_RATE, updateData)
+
 def brakeToggle():
     global brake_status
     if brake_status == '0': # if the brake is currently off
@@ -182,6 +220,47 @@ def motorToggle():
         s.send(bytes('motoron', 'utf-8'))
     else: # if the brake is currently on
         s.send(bytes('motoroff', 'utf-8'))
+
+def start():
+    # when clicked, creates a thread and runs function inside that thread 
+    # once thread created, has 10 sec timer and then closes thread 
+    global start_control
+    if not start_control: 
+        thread = threading.Thread(target = logs)
+        thread.start()
+        print ("Log has BEGUN WOOP WOOP")
+        start_control = True
+    else:
+        print ("Button is already running!")
+
+def logs():
+    global start_control
+    global toggleData
+    global datadict
+    global counter
+    
+    datadict = {}
+    timeout = time.time() + 10
+    filename = datetime.datetime.now().strftime("%m.%d.%Y_%I.%M.%S%p")
+    counter = 0
+    toggleData = True
+
+    while True:
+        if time.time() > timeout:
+            toggleData = False
+            break
+        time.sleep(0.1)
+
+    with open("logs/" + filename + ".json", 'w') as f:
+        json.dump(datadict, f, indent = 2)
+    print("10 second data recording complete. Please check log folder for file.")
+    start_control = False
+
+def stop():
+    global toggleData
+    toggleData = False
+    s.send(bytes('brakeoff', 'utf-8'))
+    s.send(bytes('motoroff', 'utf-8'))
 
 # TIME
 # Creates workspace for all time elements.
@@ -255,16 +334,23 @@ kPa_Pressure = tkLabelUnit(master=pod_canv, str='Pressure:', val='Error', unit='
 # KINEMATICS
 # Creates workspace for all motion related elements.
 # Set bg to 'blue' in kin_canv to see the extent of the workspace.
-KIN_HEIGHT=200
+KIN_HEIGHT=350
 KIN_WIDTH=400
 kin_canv = tk.Canvas(main_canv, width=KIN_WIDTH, height=KIN_HEIGHT, highlightthickness=0, bg='black')   
-kin_canv.place(x=COL1, y=COM_HEIGHT+TIME_HEIGHT+30, anchor='nw')
+kin_canv.place(x=COL1, y=COM_HEIGHT+TIME_HEIGHT-40, anchor='nw')
 
-# change later pls
 kinematicTitle = tkTitle(master=kin_canv, iconpos=0.5, icon=kin_icon)
-distance_Label = tkLabelUnit(master=kin_canv, str='Distance Traveled:', val="0", unit='km', list=0)
-velocity_Label = tkLabelUnit(master=kin_canv, str='Pod Speed:', val="0", unit='km/h', list=1)
-acceleration_Label = tkLabelUnit(master=kin_canv, str='Acceleration:', val="0", unit='km/h²', list=2)
+
+IMU_Gyro_X = tkLabelUnit(master=kin_canv, str='Gyroscope X:', val="Error", unit='rad/s', list=0)
+IMU_Gyro_Y = tkLabelUnit(master=kin_canv, str='Gyroscope Y:', val="Error", unit='rad/s', list=1)
+IMU_Gyro_Z = tkLabelUnit(master=kin_canv, str='Gyroscope Z:', val="Error", unit='rad/s', list=2)
+
+IMU_AccelerometerAcc_X = tkLabelUnit(master=kin_canv, str='Accelerometer Acc. X:', val="Error", unit='m/s^2', list=3)
+IMU_AccelerometerAcc_Y = tkLabelUnit(master=kin_canv, str='Accelerometer Acc. Y:', val="Error", unit='m/s^2', list=4)
+IMU_AccelerometerAcc_Z = tkLabelUnit(master=kin_canv, str='Accelerometer Acc. Z:', val="Error", unit='m/s^2', list=5)
+
+IMU_Magnetic_Magnitude = tkLabelUnit(master=kin_canv, str='Magnetic Magnitude: ', val="Error", unit='uT', list=6)
+IMU_AccelerometerAcc_Magnitude = tkLabelUnit(master=kin_canv, str='Acceleration Magnitude: ', val="Error", unit='m/s^2', list=7)
 
 # BATTERY
 # Creates workspace for elements relating to battery management.
@@ -277,7 +363,7 @@ bat_canv.place(x=COL3, y=POD_HEIGHT+35, anchor='nw')
 batteryTitle = tkTitle(master=bat_canv, iconpos=0.5, icon=battery_icon)
 
 TempSensorBatterySystem = tkLabelUnit(master=bat_canv, str='Battery System Temp:', val='Error', unit='°C', list=0)
-Battery_Current = tkLabelUnit(master=bat_canv, str='Battery Voltage:', val='Error', unit='V', list=1)
+Battery_Voltage = tkLabelUnit(master=bat_canv, str='Battery Voltage:', val='Error', unit='V', list=1)
 Battery_Current = tkLabelUnit(master=bat_canv, str='Battery Current:', val='Error', unit='mA', list=2)
 Battery_Capacity = tkLabelUnit(master=bat_canv, str='Battery Capacity:', val='Error', unit='%', list=3)
 
@@ -320,19 +406,33 @@ CONTROL_WIDTH = 450
 control_canv = tk.Canvas(main_canv, width=CONTROL_WIDTH, height=CONTROL_HEIGHT, highlightthickness=0, bg='black')   
 control_canv.place(x=COL2-40, y=TIME_HEIGHT+COM_HEIGHT+50, anchor='nw')
 
-brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',18,'bold'), command=brakeToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
-brakeButton.place(relx=0.25,rely=0.40,anchor='center')
+brakeButton = tk.Button(control_canv, text="BRAKES", font=('garamond',14,'bold'), command=brakeToggle, justify='center', padx=5, pady=5, bg='black', fg='red')
+brakeButton.place(relx=0.17,rely=0.20,anchor='center')
 brakeLabel = tk.Label(control_canv, text='Brake Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
-brakeLabel.place(relx=0.25,rely=0.65, anchor='center')
+brakeLabel.place(relx=0.40,rely=0.20, anchor='center')
 brakeStatus = tk.Label(control_canv, text='BRAKE OFF', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
-brakeStatus.place(relx=0.25,rely=0.8, anchor='center')
+brakeStatus.place(relx=0.40,rely=0.30, anchor='center')
 
-motorButton = tk.Button(control_canv, text="POWER", font=('garamond',18,'bold'), command=motorToggle, justify='center', padx=40, pady=10, bg='black', fg='red')
-motorButton.place(relx=0.75,rely=0.40,anchor='center')
+motorButton = tk.Button(control_canv, text="POWER", font=('garamond',14,'bold'), command=motorToggle, justify='center', padx=5, pady=5, bg='black', fg='red')
+motorButton.place(relx=0.17,rely=0.60,anchor='center')
 motorLabel = tk.Label(control_canv, text='Motor Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
-motorLabel.place(relx=0.75,rely=0.65, anchor='center')
+motorLabel.place(relx=0.40,rely=0.60, anchor='center')
 motorStatus = tk.Label(control_canv, text='MOTOR OFF', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
-motorStatus.place(relx=0.75,rely=0.8, anchor='center')
+motorStatus.place(relx=0.40,rely=0.70, anchor='center')
+
+startButton = tk.Button(control_canv, text="START", font=('garamond',14,'bold'), command=start, justify='center', padx=10, pady=10, bg='black', fg='red')
+startButton.place(relx=0.65,rely=0.20,anchor='center')
+startLabel = tk.Label(control_canv, text='Start Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
+startLabel.place(relx=0.88,rely=0.20, anchor='center')
+startStatus = tk.Label(control_canv, text='DISENGAGED', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
+startStatus.place(relx=0.88,rely=0.30, anchor='center')
+
+stopButton = tk.Button(control_canv, text="STOP", font=('garamond',14,'bold'), command=stop, justify='center', padx=10, pady=10, bg='black', fg='red')
+stopButton.place(relx=0.65,rely=0.60,anchor='center')
+stopLabel = tk.Label(control_canv, text='Stop Status:', bg='black', fg='white', font=('garamond',11,),justify='center')
+stopLabel.place(relx=0.88,rely=0.60, anchor='center')
+stopStatus = tk.Label(control_canv, text='DISENGAGED', bg='black', fg='lime green', font=('garamond',11,'bold'),justify='center')
+stopStatus.place(relx=0.88,rely=0.70, anchor='center')
 
 # CALIBRATION 
 # Creates workspace for all calibration elements
@@ -351,11 +451,12 @@ IMU_System = tkLabelUnit(master=calib_canv, str='System: ', val='Error', unit=''
 IMU_Gyrometer = tkLabelUnit(master=calib_canv, str='Gyrometer: ', val='Error', unit='', list=4)
 IMU_Accelerometer = tkLabelUnit(master=calib_canv, str='Accelerometer: ', val='Error', unit='', list=5)
 IMU_Magnometer = tkLabelUnit(master=calib_canv, str='Magnometer: ', val='Error', unit='', list=6)
+IMU_BoardTemperature = tkLabelUnit(master=calib_canv, str='Board Temperature: ', val='Error', unit='°C', list=7)
 
 # UPDATE / REFRESH
 # This is start calling the update function which is recursive.
 # The recursion is essentially the update / represh.
-root.after(REFRESH_RATE, updateRandValues)
+root.after(REFRESH_RATE, updateData)
 
 # END
 root.mainloop()
