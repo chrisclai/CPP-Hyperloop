@@ -45,7 +45,7 @@ def Main():
         print("Usage: python3 serverVPS.py")
         sys.exit(1)
 
-    host = "45.56.91.192"
+    host = "45.79.89.135"
 
     print(f"host found on ip: {host}")
 
