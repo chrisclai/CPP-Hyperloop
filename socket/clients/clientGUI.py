@@ -183,7 +183,8 @@ def updateData():
     
     # Ping 
     try:
-        pod_com_value['text'] = "Server Ping: " + str(round(ping('45.79.89.135', unit = 'ms'), 2)) + "ms"
+        #pod_com_value['text'] = "Server Ping: " + str(round(ping('45.79.89.135', unit = 'ms'), 2)) + "ms"
+        pass
     except:
         print("ping reading failed. trying again...")
     # Ping_RPI_Server.value['text'] = nums[36]
