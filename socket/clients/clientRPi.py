@@ -6,8 +6,6 @@ import socket
 from _thread import *
 import threading
 
-from ping3 import ping
-
 DATA_AMOUNT = 37
 
 global templist
@@ -20,14 +18,6 @@ global mainlist
 mainlist = []
 for i in range(0, DATA_AMOUNT):
     mainlist.append(i)
-
-def ping(addr)
-{
-    print(f"[PING] {addr} Successfully connected to ping thread!")
-    global mainlist
-    while True:
-        mainlist[36] = round(ping('45.79.89.135', 2))
-}
 
 def control(connIn, connOut, addr): 
     print(f"[CONTROL] {addr} Successfully connected to control thread!")
