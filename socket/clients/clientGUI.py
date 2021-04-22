@@ -180,16 +180,6 @@ def updateData():
     
     # Speed Laser 
     # SpeedLaser.value['text'] = nums[???]
-    
-    # Ping 
-    try:
-        #pod_com_value['text'] = "Server Ping: " + str(round(ping('45.79.89.135', unit = 'ms'), 2)) + "ms"
-        pass
-    except:
-        print("ping reading failed. trying again...")
-    # Ping_RPI_Server.value['text'] = nums[36]
-    # Ping_GUI_Server.value['text'] = ping('45.79.89.135', unit='ms') 
-    # print (ping('45.79.89.135')) 
 
     # Brake + Motor Output
     global brake_status
