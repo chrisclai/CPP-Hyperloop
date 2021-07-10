@@ -7,8 +7,6 @@ import time
 import datetime
 import json
 from PIL import Image, ImageTk
-from ping3 import ping, verbose_ping
-from ping3 import ping
 from _thread import *
 import threading  
 
