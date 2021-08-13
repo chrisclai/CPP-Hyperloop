@@ -1,20 +1,20 @@
 # CPP-Hyperloop
 Github Repository for CPP Hyperloop ECE Team
 
-The "arduino" folder contains the .ino files for sending and recieving data from the RPi.
+Developed and released open-source by Christopher Lai
 
-The "rpi" folder contains the .py file that recieves and sends commands to the Arduino.
+## Personal Files & Installation Steps
 
-The "images" folder contains the .PNG files required to run the GUI.
+For privacy purposes, the following files were hidden through the use of .gitignore. To mitigate this issue when a user activates the file, create the following folders/files with the correct information:
 
-The "vsc" folder contains the GUI code. Keep in mind the image paths are absolute, and not relative.
+1. Create a **logs** folder in the main directory, highest level.
 
-The "socket" folder contains code that can transfer data between the RPi and an external PC through the same local network.
+2. Use pip install to download the following dependencies:
 
-INSTALLATION INSTRUCTIONS:
-
-Pillow
+```
+**Pillow**
 python3 -m pip install Pillow
 
-Ping3 
+**Ping3**
 python3 -m pip install ping3
+```
