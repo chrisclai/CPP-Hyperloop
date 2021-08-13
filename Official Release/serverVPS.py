@@ -42,10 +42,10 @@ def read_write_sync(connIn, connOut, addr):
 
 def Main(): 
     if len(sys.argv) != 1:
-        print("Usage: python3 serverVPS.py")
+        print("Usage: python3 serverVPS.py <server IP>")
         sys.exit(1)
 
-    host = "173.255.223.231"
+    host = sys.argv[1]
 
     print(f"host found on ip: {host}")
 
