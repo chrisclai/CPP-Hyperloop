@@ -41,7 +41,7 @@ def read_write_sync(connIn, connOut, addr):
     # address is for GUI 
 
 def Main(): 
-    if len(sys.argv) != 1:
+    if len(sys.argv) != 2:
         print("Usage: python3 serverVPS.py <server IP>")
         sys.exit(1)
 
