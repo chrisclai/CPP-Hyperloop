@@ -9,28 +9,12 @@ const byte address[6] = "00001";     //Byte of array representing the address. T
 #define brakeLED 4
 
 // [Function] Checks to see if serial data has been recieved from the Raspberry Pi
-void RPiSerial()
+String RPiSerial()
 {
   if (Serial.available() > 0)
   {
-    char command = Serial.read();
-    // Currently, if string recieved == "brakeon", turn LED on, vice versa for off
-    if (command == 'a')
-    {
-      digitalWrite(brakeLED, HIGH);
-    }
-    else if (command == 'b')
-    {
-      digitalWrite(brakeLED, LOW);
-    }
-    else if (command == 'y')
-    {
-      digitalWrite(DCMotor, HIGH);
-    }
-    else if (command == 'z')
-    {
-      digitalWrite(DCMotor, LOW);
-    }
+    String command = String(Serial.read());
+    return command;
   }
 }
 
@@ -51,5 +35,6 @@ void setup() {
 void loop()
 {
   // Send the whole data from the structure to the receiver
-  radio.write(&packet, sizeof(CMD_Packet));
+  String packet = RPiSerial();
+  radio.write(&packet, sizeof(packet));
 }

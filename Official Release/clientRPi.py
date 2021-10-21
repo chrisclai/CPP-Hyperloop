@@ -6,7 +6,7 @@ import socket
 from _thread import *
 import threading
 
-DATA_AMOUNT = 37
+DATA_AMOUNT = 36
 
 global templist
 templist = [0, 0, 0, 0, 0]
@@ -78,8 +78,8 @@ def maindata(connIn, connOut, addr):
         for x in range(0, DATA_AMOUNT):
             try:
                 mainlist[x] = data[x]
-            except:
-                print("Data structure not found. Trying again...")
+            except Exception as e:
+                print(f"Data structure not found. Reason: {e}. Trying again...")
         
 def tempdata(connIn, connOut, addr): 
     print(f"[TEMP] {addr} Successfully connected to tempdata thread!")
@@ -109,34 +109,34 @@ def Main():
     
     serverIP = sys.argv[1]
 
-    serMega = serial.Serial("/dev/ttyACM0", 115200) # can write and read from it 
-    serUno = serial.Serial("/dev/ttyACM1", 115200)
-    serNano = serial.Serial("/dev/ttyUSB0", 115200)
+    serNanoIMU = serial.Serial("/dev/ttyUSB0", 115200) # IMU Fast Data located here 
+    serNanoTemp = serial.Serial("/dev/ttyUSB1", 115200) # Temp and Slow Data located here
+    serNanoRF = serial.Serial("/dev/ttyUSB2", 115200) # RF and Control located here
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((serverIP, 1234))
 
     print(f"Connection from {serverIP} has been established!")
 
-    # [THREAD] Control Thread to recieve inputs from the GUI
-    thread_async = threading.Thread(target = control, args=(s, serNano, serverIP))
-    thread_async.start()
+    # [THREAD] Control Thread to recieve inputs from the GUI, sends RF and control data over to the RF Nano
+    thread_RFC = threading.Thread(target = control, args=(s, serNanoRF, serverIP))
+    thread_RFC.start()
     
-    # [THREAD] Recieves IMU data from the MEGA, organizes data from other threads, and sends it off to the GUI
-    thread_main = threading.Thread(target = maindata, args=(serMega, s, serverIP))
-    thread_main.start()
+    # [THREAD] Recieves IMU data from the Nano, organizes data from other threads, and sends it off to the GUI
+    thread_IMU = threading.Thread(target = maindata, args=(serNanoIMU, serNanoIMU, serverIP))
+    thread_IMU.start()
 
-    # [THREAD] Off-Sync thread to recieve temperature data from UNO
-    thread_temp = threading.Thread(target = tempdata, args=(serUno, s, serverIP))
-    thread_temp.start()
+    # [THREAD] Off-Sync thread to recieve temperature data from Nano
+    thread_Temp = threading.Thread(target = tempdata, args=(serNanoTemp, s, serverIP))
+    thread_Temp.start()
 
     # [THREAD] Thread to send data to GUI (prevents arduino from getting stuck)
     thread_data = threading.Thread(target = senddata, args=(s, serverIP))
     thread_data.start()
 
     # [THREAD] Thread to calculate ping
-    thread_ping = threading.Thread(target = senddata, args=(serverIP))
-    thread_ping.start()
+    # thread_ping = threading.Thread(target = senddata, args=(serverIP))
+    # thread_ping.start()
     
 if __name__ == '__main__': 
     Main() 
