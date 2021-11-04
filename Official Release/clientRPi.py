@@ -12,7 +12,7 @@ global templist
 templist = [0, 0, 0, 0, 0]
 
 global T
-T = 0.0
+T = 0.05
 
 global controllist
 controllist = [0, 0]
@@ -26,6 +26,13 @@ global currentVelocityZ
 currentVelocityX = 0.0
 currentVelocityY = 0.0
 currentVelocityZ = 0.0
+
+global currentPosX
+global currentPosY
+global currentPosZ
+currentPosX = 0.0
+currentPosY = 0.0
+currentPosZ = 0.0
 
 for i in range(0, DATA_AMOUNT):
     mainlist.append(i)
@@ -61,27 +68,37 @@ def control(connIn, connOut, addr):
             print("Could not send command into arduino!!!")
         # connIn = server ; connOut = arduino - doesn't have addr; it is serial 
         # addr is from server
+
 def calculations(mainlist):
     global T
     global currentVelocityX
     global currentVelocityY
     global currentVelocityZ
+    global currentPosX
+    global currentPosY
+    global currentPosZ
     currentLinAccelX = float(mainlist[15])
     currentLinAccelY = float(mainlist[16])
     currentLinAccelZ = float(mainlist[17])
 
+    currentT = T + 0.05
     print("Acceleration X: ", currentLinAccelX , "Acceleration Y:" , currentLinAccelY , "Accaleration Z:  ",  currentLinAccelZ)
-    print("Current Time: ", T)
+    
     currentVelocityX = currentVelocityX + (currentLinAccelX*T)
     currentVelocityY = currentVelocityY + (currentLinAccelY*T)
     currentVelocityZ = currentVelocityZ + (currentLinAccelZ*T)
-
     
+    currentPosX = currentPosX + (currentVelocityX * T)
+    currentPosY = currentPosY + (currentVelocityY * T)
+    currentPosZ = currentPosZ + (currentVelocityZ * T)
+
+    #X = X + (VT)
+
+    print("Current Time: ", currentT)
+
+    print("Pos X: ", currentPosX , "Pos Y:" , currentPosY , "Pos Z:  ",  currentPosZ)
+
     print("Velocity X: ", currentVelocityX , "Velocity Y:" , currentVelocityY , "Velocity Z:  ",  currentVelocityZ)
-    T += 0.05
-
-
-
 
 def maindata(connIn, connOut): 
     #print(f"[MAIN] {addr} Successfully connected to main thread!")
@@ -91,9 +108,8 @@ def maindata(connIn, connOut):
     global mainlist
     Dlist = []
     time.sleep(1)
-    print("Test")
+    #print("Test")
     while True:
-        #print("In While Loop")
         # how rasp pi receiving data from arduino \\ ser.writeline()
         try:
             data = connIn.readline().decode('utf-8').split()
@@ -103,16 +119,14 @@ def maindata(connIn, connOut):
         # update main data list with information from the temperature sensor readings and control readings
         for x in range(0, 5):
             try:
-                #  print(x)
                 data[x] = templist[x]
-                #print(templist[x])
             except:
                 pass
-        #try:
-         #   data[34] = controllist[0]
-         #   data[35] = controllist[1]
-        #except:
-         #   print("Control list segment at fault. Trying again...")
+        try:
+            data[34] = controllist[0]
+            data[35] = controllist[1]
+        except:
+           print("Control list segment at fault. Trying again...")
         for x in range(0, DATA_AMOUNT):
             try:
                 mainlist[x] = data[x]
@@ -143,40 +157,40 @@ def senddata(connOut, addr):
         time.sleep(0.1)
 
 def Main():
-    #if len(sys.argv) != 2:
-    #    print("Usage: python3 clientThread.py")
-    #    sys.exit(1)
+    if len(sys.argv) != 2:
+        print("Usage: python3 clientThread.py")
+        sys.exit(1)
     
-    #serverIP = sys.argv[1]
+    serverIP = sys.argv[1]
 
-    serNanoIMU = serial.Serial("/dev/ttyACM0", 115200) # IMU Fast Data located here 
-    #serNanoTemp = serial.Serial("/dev/ttyUSB1", 115200) # Temp and Slow Data located here
-    #serNanoRF = serial.Serial("/dev/ttyUSB2", 115200) # RF and Control located here
+    serNanoIMU = serial.Serial("/dev/ttyUSB0", 115200) # IMU Fast Data located here 
+    serNanoTemp = serial.Serial("/dev/ttyUSB1", 115200) # Temp and Slow Data located here
+    serNanoRF = serial.Serial("/dev/ttyUSB2", 115200) # RF and Control located here
 
-    #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #s.connect((serverIP, 1234))
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((serverIP, 1234))
 
-    #print(f"Connection from {serverIP} has been established!")
+    print(f"Connection from {serverIP} has been established!")
 
     # [THREAD] Control Thread to recieve inputs from the GUI, sends RF and control data over to the RF Nano
-    #thread_RFC = threading.Thread(target = control, args=(s, serNanoRF, serverIP))
-    #thread_RFC.start()
+    thread_RFC = threading.Thread(target = control, args=(s, serNanoRF, serverIP))
+    thread_RFC.start()
     
     # [THREAD] Recieves IMU data from the Nano, organizes data from other threads, and sends it off to the GUI
     thread_IMU = threading.Thread(target = maindata, args=(serNanoIMU, serNanoIMU))
     thread_IMU.start()
 
     # [THREAD] Off-Sync thread to recieve temperature data from Nano
-    #thread_Temp = threading.Thread(target = tempdata, args=(serNanoTemp, s, serverIP))
-    #thread_Temp.start()
+    thread_Temp = threading.Thread(target = tempdata, args=(serNanoTemp, s, serverIP))
+    thread_Temp.start()
 
     # [THREAD] Thread to send data to GUI (prevents arduino from getting stuck)
-    #thread_data = threading.Thread(target = senddata, args=(s, serverIP))
-    #thread_data.start()
+    thread_data = threading.Thread(target = senddata, args=(s, serverIP))
+    thread_data.start()
 
     # [THREAD] Thread to calculate ping
-    # thread_ping = threading.Thread(target = senddata, args=(serverIP))
-    # thread_ping.start()
+    thread_ping = threading.Thread(target = senddata, args=(serverIP))
+    thread_ping.start()
     
 if __name__ == '__main__': 
     Main()
