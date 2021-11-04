@@ -24,6 +24,8 @@ int  idle = 0;
 const int len = 5;
 double sensorData[len];
 
+Serial.println(sensorData)
+
 //
 // SETUP
 //

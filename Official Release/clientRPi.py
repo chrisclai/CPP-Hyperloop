@@ -88,6 +88,12 @@ def tempdata(connIn, connOut, addr):
         tempdataUNO = connIn.readline().decode('utf-8').split()
         for x in range(0, 5):
             templist[x] = tempdataUNO[x]
+            if (templist[x] > 35):
+                controllist[0] = 1
+                controllist[1] = 0
+            elif (templist[x] <= -127):
+                controllist[0] = 1
+                controllist[1] = 0
 
 def senddata(connOut, addr): 
     print(f"[DATA] {addr} Successfully connected to main data stream thread!")
