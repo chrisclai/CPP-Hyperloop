@@ -77,6 +77,7 @@ def calculations(mainlist):
     global currentPosX
     global currentPosY
     global currentPosZ
+
     currentLinAccelX = float(mainlist[15])
     currentLinAccelY = float(mainlist[16])
     currentLinAccelZ = float(mainlist[17])
@@ -100,7 +101,7 @@ def calculations(mainlist):
 
     print("Velocity X: ", currentVelocityX , "Velocity Y:" , currentVelocityY , "Velocity Z:  ",  currentVelocityZ)
 
-def maindata(connIn, connOut): 
+def maindata(connIn, connOut, addr): 
     #print(f"[MAIN] {addr} Successfully connected to main thread!")
     print("Entered maindata Loop")
     global templist
@@ -177,9 +178,8 @@ def Main():
     thread_RFC.start()
     
     # [THREAD] Recieves IMU data from the Nano, organizes data from other threads, and sends it off to the GUI
-    thread_IMU = threading.Thread(target = maindata, args=(serNanoIMU, serNanoIMU))
+    thread_IMU = threading.Thread(target = maindata, args=(serNanoIMU, serNanoIMU, serverIP))
     thread_IMU.start()
-
     # [THREAD] Off-Sync thread to recieve temperature data from Nano
     thread_Temp = threading.Thread(target = tempdata, args=(serNanoTemp, s, serverIP))
     thread_Temp.start()
