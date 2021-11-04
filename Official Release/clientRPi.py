@@ -6,7 +6,7 @@ import socket
 from _thread import *
 import threading
 
-DATA_AMOUNT = 36
+DATA_AMOUNT = 37
 
 global templist
 templist = [0, 0, 0, 0, 0]
@@ -26,7 +26,7 @@ global currentVelocityZ
 currentVelocityX = 0.0
 currentVelocityY = 0.0
 currentVelocityZ = 0.0
-
+ 
 global currentPosX
 global currentPosY
 global currentPosZ
@@ -83,7 +83,7 @@ def calculations(mainlist):
     currentLinAccelZ = float(mainlist[17])
 
     currentT = T + 0.05
-    print("Acceleration X: ", currentLinAccelX , "Acceleration Y:" , currentLinAccelY , "Accaleration Z:  ",  currentLinAccelZ)
+    print("Acceleration X: ", currentLinAccelX , "Acceleration Y:" , currentLinAccelY , "Acceleration Z:  ",  currentLinAccelZ)
     
     currentVelocityX = currentVelocityX + (currentLinAccelX*T)
     currentVelocityY = currentVelocityY + (currentLinAccelY*T)
@@ -164,8 +164,8 @@ def Main():
     
     serverIP = sys.argv[1]
 
-    serNanoIMU = serial.Serial("/dev/ttyUSB0", 115200) # IMU Fast Data located here 
-    serNanoTemp = serial.Serial("/dev/ttyUSB1", 115200) # Temp and Slow Data located here
+    serNanoIMU = serial.Serial("/dev/ttyUSB1", 115200) # IMU Fast Data located here 
+    serNanoTemp = serial.Serial("/dev/ttyUSB0", 115200) # Temp and Slow Data located here
     serNanoRF = serial.Serial("/dev/ttyUSB2", 115200) # RF and Control located here
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -188,9 +188,5 @@ def Main():
     thread_data = threading.Thread(target = senddata, args=(s, serverIP))
     thread_data.start()
 
-    # [THREAD] Thread to calculate ping
-    thread_ping = threading.Thread(target = senddata, args=(serverIP))
-    thread_ping.start()
-    
 if __name__ == '__main__': 
     Main()
