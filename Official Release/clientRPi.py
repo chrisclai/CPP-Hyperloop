@@ -94,10 +94,10 @@ def tempdata(connIn, connOut, addr):
             elif (templist[x] <= -127):
                 controllist[0] = 1
                 controllist[1] = 0
-        if (templist[6] > 101.3):
+        if (templist[5] > 101.3):
             controllist[0] = 1
             controllist[1] = 0
-        elif (templist[6] < 0):
+        elif (templist[5] < 0):
             controllist[0] = 1
             controllist[1] = 0
 
