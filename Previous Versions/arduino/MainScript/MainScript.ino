@@ -104,14 +104,12 @@ void loop() {
   
   sensorData[37] = dt; 
   // Output Status [2]
-  String printString = "";
+  //String printString = "";
 
   for (int i = 0; i < len-1; i++)
   {
-    printString += String(sensorData[i]) + " ";
+    Serial.print(sensorData[i] + " ");
   }
-  
-  Serial.print(printString);
   Serial.println(sensorData[37]); 
 
   delay(100);
