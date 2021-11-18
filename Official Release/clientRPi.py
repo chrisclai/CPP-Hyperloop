@@ -9,7 +9,7 @@ import threading
 DATA_AMOUNT = 37
 
 global templist
-templist = [0, 0, 0, 0, 0]
+templist = [0, 0, 0, 0, 0, 0]
 
 global controllist
 controllist = [0, 0]
@@ -94,6 +94,12 @@ def tempdata(connIn, connOut, addr):
             elif (templist[x] <= -127):
                 controllist[0] = 1
                 controllist[1] = 0
+        if (templist[6] > 101.3):
+            controllist[0] = 1
+            controllist[1] = 0
+        elif (templist[6] < 0):
+            controllist[0] = 1
+            controllist[1] = 0
 
 def senddata(connOut, addr): 
     print(f"[DATA] {addr} Successfully connected to main data stream thread!")
