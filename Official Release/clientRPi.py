@@ -81,6 +81,7 @@ def calculations(mainlist):
     currentLinAccelX = float(mainlist[15])
     currentLinAccelY = float(mainlist[16])
     currentLinAccelZ = float(mainlist[17])
+    #deltaT = float(mainlist[37])
 
     currentT = T + 0.05
     print("Acceleration X: ", currentLinAccelX , "Acceleration Y:" , currentLinAccelY , "Acceleration Z:  ",  currentLinAccelZ)
